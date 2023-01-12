@@ -58,7 +58,7 @@
       <a class="nav-link active" href="/help">Help</a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="/about">About</a>
+      <router-link to="/about"> About </router-link>
     </li>
   </ul>
 
