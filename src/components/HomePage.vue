@@ -1,6 +1,5 @@
 <template>
   <body>
-  <link rel="stylesheet" href='@routes.Assets.versioned("stylesheets/home.css")' />
   <div id="phase10navbar">
     <nav id="phase10navbar" class="navbar navbar-expand-lg navbar-light bg-light">
       <phase10nav selected="game"></phase10nav>
