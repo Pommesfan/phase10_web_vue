@@ -1,15 +1,12 @@
 <template>
-  <img alt="Phase10-Logo" src="./assets/Phase10-Logo.png">
-  <HomePage/>
+  <router-view></router-view>
 </template>
 
 <script>
-import HomePage from './components/HomePage.vue'
 
 export default {
   name: 'App',
   components: {
-    HomePage
   }
 }
 </script>
