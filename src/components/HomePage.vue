@@ -13,6 +13,8 @@
       <div class="row">
         <div class="col-lg-10">
           <picture>
+            <source media="(min-width:400px)" src=Phase10Logo>
+            <img class="picture" src="@/assets/Phase10-Logo.png" alt="" style="width: auto;">
           </picture>
         </div>
         @* </div>*@
@@ -55,10 +57,10 @@
   </div>
   <ul class="nav">
     <li class="nav-item">
-      <a class="nav-link active" href="/help">Help</a>
+      <router-link to="/help"> Hilfeseite </router-link>
     </li>
     <li class="nav-item">
-      <router-link to="/about"> About </router-link>
+      <router-link to="/about"> Über Phase </router-link>
     </li>
   </ul>
 

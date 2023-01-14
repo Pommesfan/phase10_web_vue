@@ -36,7 +36,7 @@
     </div>
   </div>
   <div>
-    <a href="/game">Back to Playing-Site</a>
+    <router-link to="/"> Zurück zu Spiel </router-link>
   </div>
 </template>
 
@@ -47,46 +47,46 @@ export default {
 </script>
 
 <style scoped>
-body{
-  background-image: -moz-linear-gradient(to right,#1f40e5, #c71717, #1f40e5);
-}
+  body{
+    background-image: -moz-linear-gradient(to right,#1f40e5, #c71717, #1f40e5);
+  }
 
-h1{
-  border: 2mm ridge #c71717;
-  background: #1f40e5;
-  color: floralwhite;
-}
+  h1{
+    border: 2mm ridge #c71717;
+    background: #1f40e5;
+    color: floralwhite;
+  }
 
-.text{
-  text-align: center;
-  color: floralwhite;
-}
+  .text{
+    text-align: center;
+    color: black;
+  }
 
-.intro{
-  margin-bottom: 20px;
-}
+  .intro{
+    margin-bottom: 20px;
+  }
 
-.gameplay{
-  border: 1mm dashed #1f40e5;
-  border-radius: 10mm;
-}
+  .gameplay{
+    border: 1mm dashed #1f40e5;
+    border-radius: 10mm;
+  }
 
-.phase{
-  border: 1mm dashed #c71717;
-  border-radius: 10mm;
-  margin-top: 5mm;
-}
+  .phase{
+    border: 1mm dashed #c71717;
+    border-radius: 10mm;
+    margin-top: 5mm;
+  }
 
-.gameend{
-  border: 1mm dashed #1f40e5;
-  border-radius: 10mm;
-  margin-top: 5mm;
-}
+  .gameend{
+    border: 1mm dashed #1f40e5;
+    border-radius: 10mm;
+    margin-top: 5mm;
+  }
 
-a{
-  text-align: left;
-  color: antiquewhite;
-  display: inline-block;
-  margin-top: 5mm;
-}
+  a{
+    text-align: left;
+    color: antiquewhite;
+    display: inline-block;
+    margin-top: 5mm;
+  }
 </style>
