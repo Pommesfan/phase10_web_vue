@@ -30,18 +30,13 @@
       <div class="row">
         <div class="col-xl-6">
           <div id="inputFormSwitch" hidden>
-            <label>Karte tauschen:</label><br>
-            <input type="submit" id="btn_new_card" class="btn btn-success" value="Neue Karte">
-            <input type="submit" id="btn_open_card" class="btn btn-success" value="Offenliegende Karte">
+            <SwitchCardForm></SwitchCardForm>
           </div>
           <div id="inputFormDiscard" hidden>
-            <button type="submit" id="submit_discard" formaction="/discard" class="btn btn-success">Ablegen</button>
-            <button type="submit" id="no_discard" class="btn btn-secondary">Nicht ablegen</button>
+            <DiscardForm></DiscardForm>
           </div>
           <div id="inputFormInject" hidden>
-            <label>Karte anlegen:</label><br>
-            <input type="submit" id="btn_inject" class="btn btn-success" value="Anlegen">
-            <input type="submit" id="btn_no_inject" class="btn btn-secondary" value="Nicht anlegen">
+            <InjectForm></InjectForm>
           </div>
           <br>
 
@@ -77,9 +72,301 @@
 
 <script>
 import NavBar from "@/components/NavBar";
+import SwitchCardForm from "@/components/InputForms/SwitchCardForm";
+import InjectForm from "@/components/InputForms/InjectForm";
+import DiscardForm from "@/components/InputForms/DiscardForm";
+
 export default {
   name: "GamePage",
-  components: {NavBar}
+  components: {DiscardForm, InjectForm, SwitchCardForm, NavBar}
+}
+
+export var websocket = null
+
+function drawCard(number, color) {
+  function getColor() {
+    switch (color) {
+      case 1:
+        return "red"
+      case 2:
+        return "yellow"
+      case 3:
+        return "blue"
+      case 4:
+        return "green"
+    }
+  }
+  if (typeof color == 'number') {
+    color = getColor(color)
+  }
+  var c = document.createElement("canvas")
+  c.width = 100
+  c.height = 150
+  var ctx = c.getContext("2d");
+
+  function wave(ax,ay,bx,by,cx,cy,dx,dy,w) {
+    ctx.beginPath()
+    ctx.moveTo(bx,by)
+    ctx.bezierCurveTo(cx/3, by+w, cx/3*2, by, cx, cy-w)
+    ctx.lineTo(dx, dy)
+    ctx.lineTo(ax,ay)
+    ctx.closePath()
+    ctx.fill()
+  }
+
+  function cutEdge(ax, ay, bx, by, cx, cy) {
+    ctx.fillStyle = "white"
+    ctx.beginPath()
+    ctx.moveTo(ax, ay)
+    ctx.lineTo(bx, by)
+    ctx.lineTo(cx, cy)
+    ctx.arcTo(bx, by, ax, ay, 20)
+    ctx.closePath()
+    ctx.fill()
+  }
+
+  function shadowColor() {
+    switch (color) {
+      case "red": return "orangered"
+      case "yellow": return "lemonchiffon"
+      case "blue": return "deepskyblue"
+      case "green": return "lawngreen"
+    }
+    return ""
+  }
+
+  function digitColor() {
+    switch (color) {
+      case "red": return "firebrick"
+      case "yellow": return "gold"
+      case "blue": return "darkblue"
+      case "green": return "darkgreen"
+    }
+    return ""
+  }
+
+  ctx.fillStyle = "ivory"
+  ctx.fillRect(0,0,100,150)
+  ctx.fillStyle = color
+
+  ctx.shadowColor = shadowColor();
+  ctx.shadowBlur = 15;
+  //upper wave
+  wave(0,0,0,30,100,30, 100, 0, 15)
+  //bottom wave
+  wave(0,150, 0,120,100,120,100,150, 15)
+  ctx.shadowBlur = 0;
+
+  ctx.fillStyle = digitColor()
+
+  ctx.font = "64px serif"
+  if(number < 10) {
+    ctx.fillText(number.toString(), 32,100)
+  } else {
+    ctx.fillText(number.toString(), 10,100)
+  }
+
+  ctx.fillStyle = "white"
+  cutEdge(0,25, 0,0, 25,0)
+  cutEdge(100,25,100,0, 75, 0)
+  cutEdge(0,125,0,150,25,150)
+  cutEdge(100, 125, 100, 150, 75, 150)
+  return c
+}
+
+function get_player_name(idx) {
+  return sessionStorage.getItem("player_" + idx)
+}
+
+function show_player_cards(cards, show_checkboxes, show_radio_buttons, cardGroupSize) {
+  let playerCardsDiv = document.getElementById("playerCards")
+  playerCardsDiv.innerHTML = ""
+  let rowDiv = document.createElement("div")
+  rowDiv.setAttribute("class", "row")
+  for (let i = 0; i < cards.length; i++) {
+    let colDiv = document.createElement("div")
+    colDiv.setAttribute("class", "col")
+    colDiv.appendChild(drawCard(cards[i]['value'], cards[i]['color']))
+    if(show_radio_buttons) {
+      colDiv.appendChild(radio_buttons_player_cards(i))
+    }
+    if(show_checkboxes) {
+      checkboxes(i, cardGroupSize, colDiv)
+    }
+    rowDiv.appendChild(colDiv)
+  }
+  playerCardsDiv.appendChild(rowDiv)
+}
+
+function checkboxes(i, cardGroupSize, colDiv) {
+  for (let j = 0; j < cardGroupSize; j++) {
+    let checkbox = document.createElement("input")
+    checkbox.setAttribute("class", "form-check-input")
+    checkbox.type = "checkbox"
+    checkbox.id = "inlineCheckbox" + j + "_" + i
+    colDiv.appendChild(checkbox)
+  }
+}
+
+function radio_buttons_player_cards(i) {
+  let radioButton = document.createElement("input")
+  radioButton.id = "selected_player_card_" + i
+  radioButton.type="radio"
+  radioButton.name="card_index"
+  radioButton.value=i
+  return radioButton
+}
+
+function radio_buttons_discarded_Cards(i,j,position) {
+  let radioButton = document.createElement("input")
+  radioButton.type = "radio"
+  radioButton.name = "inject_to"
+  radioButton.value = i + "_" + j + "_" + position
+  return radioButton
+}
+
+function discarded_cards(cardStashes, show_radio_buttons) {
+  let discardedCardsDiv = document.getElementById("discardedCards")
+  discardedCardsDiv.innerHTML = ""
+  for (let i = 0; i < cardStashes.length; i++) {
+    let textView = document.createElement("p")
+    textView.innerHTML = get_player_name(i)
+    discardedCardsDiv.appendChild(textView)
+    let cardGroups = cardStashes[i]
+    if (cardGroups == null) {
+      let textView2 = document.createElement("p")
+      textView2.innerHTML = "Keine Karten"
+      discardedCardsDiv.appendChild(textView2)
+    } else {
+      for(let j = 0; j < cardGroups.length; j++) {
+        let cards = cardGroups[j]
+
+        if(show_radio_buttons) {
+          discardedCardsDiv.appendChild(radio_buttons_discarded_Cards(i,j,"AFTER"))
+        }
+
+        for (let c in cards) {
+          let card = cards[c]
+          let cardView = drawCard(card['value'], card['color'])
+          discardedCardsDiv.appendChild(cardView)
+        }
+
+        if(show_radio_buttons) {
+          discardedCardsDiv.appendChild(radio_buttons_discarded_Cards(i,j,"AFTER"))
+        }
+      }
+    }
+  }
+}
+
+function new_round_message(data) {
+  let s = "Neue Runde:"
+  const errorPoints = data['errorPoints']
+  const number_of_phase = data['numberOfPhase']
+  const phase_description = data['phaseDescription']
+  for(let i = 0; i < sessionStorage.getItem("number_of_players"); i++) {
+    s += ("\n" + get_player_name(i) + ": " + errorPoints[i] + " Fehlerpunkte; Phase: " + number_of_phase[i] + ": " + phase_description[i])
+  }
+  return s
+}
+
+function turnEnded(data) {
+  show_player_cards(data['cardStash'], false, true, data['card_group_size'])
+  document.getElementById("inputFormSwitch").hidden = true
+  document.getElementById("inputFormDiscard").hidden = true
+  document.getElementById("inputFormInject").hidden = true
+}
+
+function playersTurn(data) {
+  show_player_cards(data['cardStash'], false, true, data['card_group_size'])
+  discarded_cards(data['discardedStash'], false)
+
+  let newCard = data['newCard']
+  let openCard = data['openCard']
+  let newCardDiv = document.getElementById("newCard")
+  let openCardDiv = document.getElementById("openCard")
+  newCardDiv.innerHTML = ""
+  openCardDiv.innerHTML = ""
+  newCardDiv.appendChild(drawCard(newCard['value'], newCard['color']))
+  openCardDiv.appendChild(drawCard(openCard['value'], openCard['color']))
+
+  document.getElementById("currentPlayer").innerHTML = get_player_name(data['activePlayer'])
+  document.getElementById("inputFormSwitch").hidden = false
+  document.getElementById("inputFormDiscard").hidden = true
+  document.getElementById("inputFormInject").hidden = true
+}
+
+function goToDiscard(data) {
+  show_player_cards(data['cardStash'], true, false, data['card_group_size'])
+  document.getElementById("inputFormSwitch").hidden = true
+  document.getElementById("inputFormDiscard").hidden = false
+}
+
+function goToInject(data) {
+  document.getElementById("inputFormSwitch").hidden = true
+  document.getElementById("inputFormInject").hidden = false
+  show_player_cards(data['cardStash'], false, true, 0)
+  discarded_cards(data['discardedStash'], true)
+}
+
+function update(data) {
+  let event = data['event']
+  if(event == "sendPlayerNames") {
+    let names = data['players']
+    for(let i = 0; i < data['length']; i++) {
+      sessionStorage.setItem("player_" + i, names[i])
+    }
+  }
+  if (event == "GoToDiscardEvent") {
+    goToDiscard(data)
+  } else if(event == "NewRoundEvent") {
+    turnEnded(data)
+    alert(new_round_message(data))
+  } else if(data['event'] == "TurnEndedEvent") {
+    turnEnded(data)
+  } else if(data['event'] == "PlayersTurnEvent") {
+    alert("Du bist dran!")
+    playersTurn(data)
+  } else if (event == "GoToInjectEvent") {
+    goToInject(data)
+  } else if (event == "GameStartedEvent") {
+    playersTurn(data)
+    alert(new_round_message(data))
+  }
+}
+
+export function connectWebSocket() {
+  let newWebsocket = new WebSocket("ws://localhost:9000/websocket");
+
+  newWebsocket.onopen = function() {
+    console.log("Trying to connect to Server");
+    newWebsocket.send(JSON.stringify({"cmd": "loginPlayer", "loggedInPlayer": sessionStorage.getItem("thisPlayer")}))
+    newWebsocket.send(JSON.stringify({"cmd": "getStatus"}))
+  }
+
+  newWebsocket.onclose = function () {
+    console.log('Connection Closed!');
+  };
+
+  newWebsocket.onerror = function (error) {
+    console.log('Error Occured: ' + error);
+  };
+
+  newWebsocket.onmessage = function (e) {
+    if (typeof e.data === "string") {
+      let js = JSON.parse(e.data)
+      update(js)
+    }
+    else if (e.data instanceof ArrayBuffer) {
+      console.log('ArrayBuffer received: ' + e.data);
+      alert('ArrayBuffer received: ' + e.data)
+    }
+    else if (e.data instanceof Blob) {
+      console.log('Blob received: ' + e.data);
+      alert('Blob received: ' + e.data)
+    }
+  };
+  websocket = newWebsocket
 }
 </script>
 

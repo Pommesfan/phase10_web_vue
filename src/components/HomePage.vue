@@ -62,6 +62,7 @@
 <script>
 import router from "@/router";
 import NavBar from "@/components/NavBar";
+import connectWebSocket from "@/components/GamePage"
 export default {
   name: "HomePage",
   components: {NavBar},
@@ -93,6 +94,7 @@ export default {
 
     function update() {
       router.push({path : "/game"})
+      connectWebSocket()
     }
 
     document.getElementById("submit_player_names").onclick = submit_player_names
