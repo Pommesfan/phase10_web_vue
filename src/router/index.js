@@ -2,6 +2,7 @@ import HomePage from "@/components/HomePage";
 import About from "@/components/About";
 import {createRouter, createWebHistory} from "vue-router";
 import HelpPage from "@/components/HelpPage";
+import Game from "@/components/GamePage";
 
 const routes = [
     {
@@ -19,6 +20,11 @@ const routes = [
         name: 'HelpPage',
         component: HelpPage
     },
+    {
+        path: '/game',
+        name: 'GamePage',
+        component: Game
+    }
 ]
 
 const router = createRouter({
