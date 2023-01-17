@@ -2,7 +2,7 @@
   <body>
   <div id="phase10navbar">
     <nav id="phase10navbar" class="navbar navbar-expand-lg navbar-light bg-light">
-      <phase10nav selected="game"></phase10nav>
+      <NavBar></NavBar>
     </nav>
   </div>
   <h1>Phase 10</h1>
@@ -55,22 +55,16 @@
       </div>
     </div>
   </div>
-  <ul class="nav">
-    <li class="nav-item">
-      <router-link to="/help"> Hilfeseite </router-link>
-    </li>
-    <li class="nav-item">
-      <router-link to="/about"> Über Phase </router-link>
-    </li>
-  </ul>
 
   </body>
 </template>
 
 <script>
 import router from "@/router";
+import NavBar from "@/components/NavBar";
 export default {
   name: "HomePage",
+  components: {NavBar},
   props: {
     msg: String
   },

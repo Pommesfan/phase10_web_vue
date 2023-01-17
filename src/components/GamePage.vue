@@ -2,7 +2,7 @@
   <div>
     <div id="phase10navbar">
       <nav id="phase10navbar" class="navbar navbar-expand-lg navbar-light bg-light">
-        <phase10nav selected="game"></phase10nav>
+        <NavBar></NavBar>
       </nav>
     </div>
 
@@ -76,8 +76,10 @@
 </template>
 
 <script>
+import NavBar from "@/components/NavBar";
 export default {
-  name: "GamePage"
+  name: "GamePage",
+  components: {NavBar}
 }
 </script>
 
