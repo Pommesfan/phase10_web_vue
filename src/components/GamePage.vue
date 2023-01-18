@@ -79,10 +79,11 @@ import {connectWebSocket} from "@/mixins/handleWebSocket";
 
 export default {
   name: "GamePage",
-  components: {DiscardForm, InjectForm, SwitchCardForm, NavBar}
+  components: {DiscardForm, InjectForm, SwitchCardForm, NavBar},
+  mounted() {
+    connectWebSocket(update)
+  }
 }
-
-export var websocket = null
 
 function drawCard(number, color) {
   function getColor() {
@@ -335,7 +336,6 @@ function update(data) {
     alert(new_round_message(data))
   }
 }
-connectWebSocket(update)
 
 </script>
 
