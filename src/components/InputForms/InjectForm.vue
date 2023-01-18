@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import websocket from "@/components/GamePage";
+import websocket from "@/mixins/handleWebSocket";
 
 export default {
   name: "InjectForm",

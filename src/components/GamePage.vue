@@ -75,6 +75,7 @@ import NavBar from "@/components/NavBar";
 import SwitchCardForm from "@/components/InputForms/SwitchCardForm";
 import InjectForm from "@/components/InputForms/InjectForm";
 import DiscardForm from "@/components/InputForms/DiscardForm";
+import {connectWebSocket} from "@/mixins/handleWebSocket";
 
 export default {
   name: "GamePage",
@@ -334,40 +335,8 @@ function update(data) {
     alert(new_round_message(data))
   }
 }
+connectWebSocket(update)
 
-export function connectWebSocket() {
-  let newWebsocket = new WebSocket("ws://localhost:9000/websocket");
-
-  newWebsocket.onopen = function() {
-    console.log("Trying to connect to Server");
-    newWebsocket.send(JSON.stringify({"cmd": "loginPlayer", "loggedInPlayer": sessionStorage.getItem("thisPlayer")}))
-    newWebsocket.send(JSON.stringify({"cmd": "getStatus"}))
-  }
-
-  newWebsocket.onclose = function () {
-    console.log('Connection Closed!');
-  };
-
-  newWebsocket.onerror = function (error) {
-    console.log('Error Occured: ' + error);
-  };
-
-  newWebsocket.onmessage = function (e) {
-    if (typeof e.data === "string") {
-      let js = JSON.parse(e.data)
-      update(js)
-    }
-    else if (e.data instanceof ArrayBuffer) {
-      console.log('ArrayBuffer received: ' + e.data);
-      alert('ArrayBuffer received: ' + e.data)
-    }
-    else if (e.data instanceof Blob) {
-      console.log('Blob received: ' + e.data);
-      alert('Blob received: ' + e.data)
-    }
-  };
-  websocket = newWebsocket
-}
 </script>
 
 <style scoped>
