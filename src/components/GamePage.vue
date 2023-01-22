@@ -9,11 +9,9 @@
     <div class="container">
       <div class="row">
         <form id="cardstash">
-          <div class="col w-50">
-            <div id="discardedCards">
-            </div>
+          <div id="discardedCards" class="row w-100">
           </div>
-          <div class="col w-50">
+          <div class="crow w-100">
             <div>
               Aktueller Spieler: <p id="currentPlayer"></p><br>
               Neue Karte:<br>
@@ -150,20 +148,22 @@ export default {
         } else {
           for(let j = 0; j < cardGroups.length; j++) {
             let cards = cardGroups[j]
-
+            let col = document.createElement('div')
+            col.setAttribute("class", "col")
             if(show_radio_buttons) {
-              discardedCardsDiv.appendChild(radio_buttons_discarded_Cards(i,j,"AFTER"))
+              col.appendChild(radio_buttons_discarded_Cards(i,j,"AFTER"))
             }
 
             for (let c in cards) {
               let card = cards[c]
               let cardView = drawCard(card['value'], card['color'])
-              discardedCardsDiv.appendChild(cardView)
+              col.appendChild(cardView)
             }
 
             if(show_radio_buttons) {
-              discardedCardsDiv.appendChild(radio_buttons_discarded_Cards(i,j,"AFTER"))
+              col.appendChild(radio_buttons_discarded_Cards(i,j,"AFTER"))
             }
+            discardedCardsDiv.appendChild(col)
           }
         }
       }
@@ -181,7 +181,8 @@ export default {
     }
 
     function turnEnded(data) {
-      show_player_cards(data['cardStash'], false, true, data['card_group_size'])
+      show_player_cards(data['cardStash'], false, false, data['card_group_size'])
+      discarded_cards(data['discardedStash'], false)
       document.getElementById("inputFormSwitch").hidden = true
       document.getElementById("inputFormDiscard").hidden = true
       document.getElementById("inputFormInject").hidden = true
