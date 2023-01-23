@@ -151,7 +151,7 @@ export default {
             let col = document.createElement('div')
             col.setAttribute("class", "col")
             if(show_radio_buttons) {
-              col.appendChild(radio_buttons_discarded_Cards(i,j,"AFTER"))
+              col.appendChild(radio_buttons_discarded_Cards(i,j,"FRONT"))
             }
 
             for (let c in cards) {
@@ -224,14 +224,15 @@ export default {
       let event = data['event']
       if(event == "sendPlayerNames") {
         let names = data['players']
-        for(let i = 0; i < data['length']; i++) {
+        const len = data['length']
+        for(let i = 0; i < len; i++) {
           sessionStorage.setItem("player_" + i, names[i])
         }
+        sessionStorage.setItem("number_of_players", len)
       }
       if (event == "GoToDiscardEvent") {
         goToDiscard(data)
       } else if(event == "NewRoundEvent") {
-        turnEnded(data)
         alert(new_round_message(data))
       } else if(data['event'] == "TurnEndedEvent") {
         turnEnded(data)
