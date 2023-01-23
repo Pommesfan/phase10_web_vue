@@ -5,7 +5,7 @@
 
 <script>
 export default {
-  name: 'App',
+  name: 'phase10_web_vue',
   components: {
   }
 }

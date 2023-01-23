@@ -16,8 +16,8 @@ module.exports = defineConfig({
       clientsClaim: true
     },
     manifestOptions: {
-      name: "Malefiz",
-      short_name: "Malefiz",
+      name: "phase10_web_vue",
+      short_name: "phase10_web_vue",
       start_url: '.',
       display: 'standalone',
       theme_color: '#efa032'
