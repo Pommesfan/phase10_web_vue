@@ -6,18 +6,26 @@
       </nav>
     </div>
 
-    <div class="container">
+    <div class="container-fluid">
       <div class="row">
         <form id="cardstash">
-          <div id="discardedCards" class="row w-100">
+          <div class="col w-100">
+            <div id="discardedCards">
+            </div>
           </div>
-          <div class="crow w-100">
+          <div class="col">
             <div>
               Aktueller Spieler: <p id="currentPlayer"></p><br>
-              Neue Karte:<br>
-              <p id="newCard"></p><br>
-              Offenliegende Karte:<br>
-              <p id="openCard"></p><br>
+              <div class="row">
+                <div class="col-3">
+                  Neue Karte:<br>
+                  <p id="newCard"></p><br>
+                </div>
+                <div class="col-3">
+                  Offenliegende Karte:<br>
+                  <p id="openCard"></p><br>
+                </div>
+              </div>
               Karten des Spielers:<br><br>
               <div id="playerCards">
               </div>
@@ -95,6 +103,7 @@ export default {
         let colDiv = document.createElement("div")
         colDiv.setAttribute("class", "col")
         colDiv.appendChild(drawCard(cards[i]['value'], cards[i]['color']))
+        colDiv.appendChild(document.createElement("br"))
         if(show_radio_buttons) {
           colDiv.appendChild(radio_buttons_player_cards(i))
         }
@@ -148,22 +157,20 @@ export default {
         } else {
           for(let j = 0; j < cardGroups.length; j++) {
             let cards = cardGroups[j]
-            let col = document.createElement('div')
-            col.setAttribute("class", "col")
+
             if(show_radio_buttons) {
-              col.appendChild(radio_buttons_discarded_Cards(i,j,"FRONT"))
+              discardedCardsDiv.appendChild(radio_buttons_discarded_Cards(i,j,"AFTER"))
             }
 
             for (let c in cards) {
               let card = cards[c]
               let cardView = drawCard(card['value'], card['color'])
-              col.appendChild(cardView)
+              discardedCardsDiv.appendChild(cardView)
             }
 
             if(show_radio_buttons) {
-              col.appendChild(radio_buttons_discarded_Cards(i,j,"AFTER"))
+              discardedCardsDiv.appendChild(radio_buttons_discarded_Cards(i,j,"AFTER"))
             }
-            discardedCardsDiv.appendChild(col)
           }
         }
       }
@@ -181,8 +188,7 @@ export default {
     }
 
     function turnEnded(data) {
-      show_player_cards(data['cardStash'], false, false, data['card_group_size'])
-      discarded_cards(data['discardedStash'], false)
+      show_player_cards(data['cardStash'], false, true, data['card_group_size'])
       document.getElementById("inputFormSwitch").hidden = true
       document.getElementById("inputFormDiscard").hidden = true
       document.getElementById("inputFormInject").hidden = true
@@ -224,15 +230,14 @@ export default {
       let event = data['event']
       if(event == "sendPlayerNames") {
         let names = data['players']
-        const len = data['length']
-        for(let i = 0; i < len; i++) {
+        for(let i = 0; i < data['length']; i++) {
           sessionStorage.setItem("player_" + i, names[i])
         }
-        sessionStorage.setItem("number_of_players", len)
       }
       if (event == "GoToDiscardEvent") {
         goToDiscard(data)
       } else if(event == "NewRoundEvent") {
+        turnEnded(data)
         alert(new_round_message(data))
       } else if(data['event'] == "TurnEndedEvent") {
         turnEnded(data)
