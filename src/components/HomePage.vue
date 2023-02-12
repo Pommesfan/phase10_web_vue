@@ -9,7 +9,7 @@
   <p class = "jumbo"> Phase10 ist ein Kartenspiel, bei dem man 10 verschiedene Kombinationen von Karten(Phasen) erfüllen muss.</p>
   <br>
   <div class="nameInput">
-    <div class="container">
+    <div class="container-fluid">
       <div class="row">
         <div class="col-lg-10">
           <picture>
@@ -18,7 +18,7 @@
           </picture>
         </div>
         @* </div>*@
-      <div class="col-lg-2">
+      <div id=namePanel class="col-lg-2">
         <div class="name">
           <div class="player">
             <label for="p1">Player 1:</label>
@@ -114,5 +114,7 @@ export default {
 </script>
 
 <style scoped>
-
+  #namePanel {
+    align-self: flex-end;
+  }
 </style>

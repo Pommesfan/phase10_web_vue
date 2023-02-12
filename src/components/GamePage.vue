@@ -6,20 +6,26 @@
       </nav>
     </div>
 
-    <div class="container">
+    <div class="container-fluid">
       <div class="row">
         <form id="cardstash">
-          <div class="col w-50">
+          <div class="col w-100">
             <div id="discardedCards">
             </div>
           </div>
-          <div class="col w-50">
+          <div class="col">
             <div>
               Aktueller Spieler: <p id="currentPlayer"></p><br>
-              Neue Karte:<br>
-              <p id="newCard"></p><br>
-              Offenliegende Karte:<br>
-              <p id="openCard"></p><br>
+              <div class="row">
+                <div class="col-3">
+                  Neue Karte:<br>
+                  <p id="newCard"></p><br>
+                </div>
+                <div class="col-3">
+                  Offenliegende Karte:<br>
+                  <p id="openCard"></p><br>
+                </div>
+              </div>
               Karten des Spielers:<br><br>
               <div id="playerCards">
               </div>
@@ -97,6 +103,7 @@ export default {
         let colDiv = document.createElement("div")
         colDiv.setAttribute("class", "col")
         colDiv.appendChild(drawCard(cards[i]['value'], cards[i]['color']))
+        colDiv.appendChild(document.createElement("br"))
         if(show_radio_buttons) {
           colDiv.appendChild(radio_buttons_player_cards(i))
         }
