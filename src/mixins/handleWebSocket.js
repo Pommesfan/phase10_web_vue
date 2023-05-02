@@ -1,7 +1,8 @@
 export var websocket = null
 
 export function connectWebSocket(updateFunction) {
-    let newWebsocket = new WebSocket("ws://" + location.host.replace("8080", "9000") + "/websocket");
+    let newWebsocket = new WebSocket("ws://" + location.host.split(":")[0] + ":9000/websocket");
+    alert(location.host)
 
     newWebsocket.onopen = function() {
         console.log("Trying to connect to Server");
