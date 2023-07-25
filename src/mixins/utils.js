@@ -1,4 +1,4 @@
-export function drawCard(number, color) {
+export function drawCard(number, color, c=null) {
     function getColor() {
         switch (color) {
             case 1:
@@ -14,7 +14,9 @@ export function drawCard(number, color) {
     if (typeof color == 'number') {
         color = getColor(color)
     }
-    var c = document.createElement("canvas")
+    if (c == null) {
+        c = document.createElement("canvas")
+    }
     c.width = 100
     c.height = 150
     var ctx = c.getContext("2d");

@@ -27,8 +27,7 @@
                 </div>
               </div>
               Karten des Spielers:<br><br>
-              <div id="playerCards">
-              </div>
+              <PlayerCards :key="playerCards" :cards=playerCards></PlayerCards>
             </div>
           </div>
         </form>
@@ -83,11 +82,21 @@ import InjectForm from "@/components/InputForms/InjectForm";
 import DiscardForm from "@/components/InputForms/DiscardForm";
 import {connectWebSocket} from "@/mixins/handleWebSocket";
 import {drawCard} from "@/mixins/utils"
+import PlayerCards from "@/components/OutputForms/PlayerCards";
 
 export default {
   name: "GamePage",
-  components: {DiscardForm, InjectForm, SwitchCardForm, NavBar},
+  components: {PlayerCards, DiscardForm, InjectForm, SwitchCardForm, NavBar},
+  data() {
+    return {
+      playerCards: [],
+      checkboxesPlayerCards: false,
+      radioButtonsPlayerCards: false,
+      cardGroupSize: 0,
+    }
+  },
   mounted() {
+    const GamePageRef = this
     connectWebSocket(update)
 
     function get_player_name(idx) {
@@ -95,6 +104,11 @@ export default {
     }
 
     function show_player_cards(cards, show_checkboxes, show_radio_buttons, cardGroupSize) {
+      GamePageRef.playerCards = cards
+      GamePageRef.checkboxesPlayerCards = show_checkboxes
+      GamePageRef.radioButtonsPlayerCards = show_radio_buttons
+      GamePageRef.cardGroupSize = cardGroupSize
+      /**
       let playerCardsDiv = document.getElementById("playerCards")
       playerCardsDiv.innerHTML = ""
       let rowDiv = document.createElement("div")
@@ -113,8 +127,10 @@ export default {
         rowDiv.appendChild(colDiv)
       }
       playerCardsDiv.appendChild(rowDiv)
+       **/
     }
 
+    /**
     function checkboxes(i, cardGroupSize, colDiv) {
       for (let j = 0; j < cardGroupSize; j++) {
         let checkbox = document.createElement("input")
@@ -133,6 +149,7 @@ export default {
       radioButton.value=i
       return radioButton
     }
+     **/
 
     function radio_buttons_discarded_Cards(i,j,position) {
       let radioButton = document.createElement("input")

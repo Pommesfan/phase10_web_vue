@@ -6,7 +6,6 @@
 
 <script>
 import {websocket} from "@/mixins/handleWebSocket";
-
 export default {
   name: "SwitchCardForm",
   mounted() {
