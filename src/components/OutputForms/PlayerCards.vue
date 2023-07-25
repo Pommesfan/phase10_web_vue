@@ -1,13 +1,13 @@
 <template>
-  <b-container fluid="xl">
+  <div class="row">
     <li v-for="(item, idx) in cards.length" :key="idx">
-      <b-col>
+      <div class="col">
         <canvas height="150" width="100" v-bind:id="'player_card_' + idx"></canvas>
         <br>
         <input type="checkbox">
-      </b-col>
+      </div>
     </li>
-  </b-container>
+  </div>
 </template>
 
 <script>
