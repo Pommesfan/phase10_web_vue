@@ -9,11 +9,9 @@
     <div class="container-fluid">
       <div class="row">
         <form id="cardstash">
-          <div class="col w-100">
-            <div id="discardedCards">
-            </div>
+          <div id="discardedCards" class="row w-100">
           </div>
-          <div class="col">
+          <div class="crow-100">
             <div>
               Aktueller Spieler: <p id="currentPlayer"></p><br>
               <div class="row">

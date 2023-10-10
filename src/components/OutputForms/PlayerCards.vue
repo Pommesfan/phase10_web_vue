@@ -1,12 +1,10 @@
 <template>
   <div class="row">
-    <li v-for="(item, idx) in cards.length" :key="idx">
-      <div class="col">
-        <canvas height="150" width="100" v-bind:id="'player_card_' + idx"></canvas>
-        <br>
-        <input type="checkbox">
-      </div>
-    </li>
+    <div class="col" v-for="(item, idx) in cards.length" :key="idx">
+      <canvas height="150" width="100" v-bind:id="'player_card_' + idx"></canvas>
+      <br>
+      <input type="checkbox">
+    </div>
   </div>
 </template>
 
