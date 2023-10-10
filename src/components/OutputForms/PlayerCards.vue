@@ -1,9 +1,10 @@
 <template>
   <div class="row">
-    <div class="col" v-for="(item, idx) in cards.length" :key="idx">
-      <canvas height="150" width="100" v-bind:id="'player_card_' + idx"></canvas>
+    <div class="col" v-for="(_, idx_card) in cards.length" :key="idx_card">
+      <canvas height="150" width="100" v-bind:id="'player_card_' + idx_card"></canvas>
       <br>
-      <input type="checkbox">
+      <input type="checkbox" v-for="(_, idx_checkbox) in checkboxes" :key="idx_checkbox" v-bind:id="'player_card_checkbox_' + idx_checkbox + '_' + idx_checkbox">
+      <input type="radio" v-if="showRadioButtons==true" v-bind:id="'player_card_radio_button' + idx_card" name="playerCardToggleGroup">
     </div>
   </div>
 </template>
@@ -15,7 +16,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 
 export default {
   name: "PlayerCards",
-  props: ["cards"],
+  props: ["cards", "checkboxes", "showRadioButtons"],
   mounted() {
     for (var i = 0; i < this.cards.length; i++) {
       let cardview = document.getElementById("player_card_" + i)

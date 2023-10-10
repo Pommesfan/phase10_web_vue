@@ -25,7 +25,7 @@
                 </div>
               </div>
               Karten des Spielers:<br><br>
-              <PlayerCards :key="playerCards" :cards=playerCards></PlayerCards>
+              <PlayerCards :key="playerCards" :cards=playerCards :checkboxes=2 :show-radio-buttons="true"></PlayerCards>
             </div>
           </div>
         </form>
@@ -106,48 +106,7 @@ export default {
       GamePageRef.checkboxesPlayerCards = show_checkboxes
       GamePageRef.radioButtonsPlayerCards = show_radio_buttons
       GamePageRef.cardGroupSize = cardGroupSize
-      /**
-      let playerCardsDiv = document.getElementById("playerCards")
-      playerCardsDiv.innerHTML = ""
-      let rowDiv = document.createElement("div")
-      rowDiv.setAttribute("class", "row")
-      for (let i = 0; i < cards.length; i++) {
-        let colDiv = document.createElement("div")
-        colDiv.setAttribute("class", "col")
-        colDiv.appendChild(drawCard(cards[i]['value'], cards[i]['color']))
-        colDiv.appendChild(document.createElement("br"))
-        if(show_radio_buttons) {
-          colDiv.appendChild(radio_buttons_player_cards(i))
-        }
-        if(show_checkboxes) {
-          checkboxes(i, cardGroupSize, colDiv)
-        }
-        rowDiv.appendChild(colDiv)
-      }
-      playerCardsDiv.appendChild(rowDiv)
-       **/
     }
-
-    /**
-    function checkboxes(i, cardGroupSize, colDiv) {
-      for (let j = 0; j < cardGroupSize; j++) {
-        let checkbox = document.createElement("input")
-        checkbox.setAttribute("class", "form-check-input")
-        checkbox.type = "checkbox"
-        checkbox.id = "inlineCheckbox" + j + "_" + i
-        colDiv.appendChild(checkbox)
-      }
-    }
-
-    function radio_buttons_player_cards(i) {
-      let radioButton = document.createElement("input")
-      radioButton.id = "selected_player_card_" + i
-      radioButton.type="radio"
-      radioButton.name="card_index"
-      radioButton.value=i
-      return radioButton
-    }
-     **/
 
     function radio_buttons_discarded_Cards(i,j,position) {
       let radioButton = document.createElement("input")
