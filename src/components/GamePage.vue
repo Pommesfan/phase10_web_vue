@@ -25,7 +25,7 @@
                 </div>
               </div>
               Karten des Spielers:<br><br>
-              <PlayerCards :key="playerCards" :cards=playerCards :checkboxes=2 :show-radio-buttons="true"></PlayerCards>
+              <PlayerCards :key="playerCards" :cards=playerCards :checkboxes=checkboxesPlayerCards :show-radio-buttons=radioButtonsPlayerCards></PlayerCards>
             </div>
           </div>
         </form>
@@ -88,7 +88,7 @@ export default {
   data() {
     return {
       playerCards: [],
-      checkboxesPlayerCards: false,
+      checkboxesPlayerCards: 0,
       radioButtonsPlayerCards: false,
       cardGroupSize: 0,
     }
@@ -162,14 +162,14 @@ export default {
     }
 
     function turnEnded(data) {
-      show_player_cards(data['cardStash'], false, true, data['card_group_size'])
+      show_player_cards(data['cardStash'], 0, false, data['card_group_size'])
       document.getElementById("inputFormSwitch").hidden = true
       document.getElementById("inputFormDiscard").hidden = true
       document.getElementById("inputFormInject").hidden = true
     }
 
     function playersTurn(data) {
-      show_player_cards(data['cardStash'], false, true, data['card_group_size'])
+      show_player_cards(data['cardStash'], 0, true, data['card_group_size'])
       discarded_cards(data['discardedStash'], false)
 
       let newCard = data['newCard']
@@ -188,7 +188,7 @@ export default {
     }
 
     function goToDiscard(data) {
-      show_player_cards(data['cardStash'], true, false, data['card_group_size'])
+      show_player_cards(data['cardStash'], 2, false, data['card_group_size'])
       document.getElementById("inputFormSwitch").hidden = true
       document.getElementById("inputFormDiscard").hidden = false
     }

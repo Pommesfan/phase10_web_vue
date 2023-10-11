@@ -12,7 +12,6 @@
 <script>
 
 import {drawCard} from "@/mixins/utils";
-import 'bootstrap/dist/css/bootstrap.min.css'
 
 export default {
   name: "PlayerCards",
