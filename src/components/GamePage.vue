@@ -101,9 +101,9 @@ export default {
       return sessionStorage.getItem("player_" + idx)
     }
 
-    function show_player_cards(cards, show_checkboxes, show_radio_buttons, cardGroupSize) {
+    function show_player_cards(cards, number_checkboxes, show_radio_buttons, cardGroupSize) {
       GamePageRef.playerCards = cards
-      GamePageRef.checkboxesPlayerCards = show_checkboxes
+      GamePageRef.checkboxesPlayerCards = number_checkboxes
       GamePageRef.radioButtonsPlayerCards = show_radio_buttons
       GamePageRef.cardGroupSize = cardGroupSize
     }
@@ -188,7 +188,7 @@ export default {
     }
 
     function goToDiscard(data) {
-      show_player_cards(data['cardStash'], 2, false, data['card_group_size'])
+      show_player_cards(data['cardStash'], data['card_group_size'], false, data['card_group_size'])
       document.getElementById("inputFormSwitch").hidden = true
       document.getElementById("inputFormDiscard").hidden = false
     }
@@ -196,7 +196,7 @@ export default {
     function goToInject(data) {
       document.getElementById("inputFormSwitch").hidden = true
       document.getElementById("inputFormInject").hidden = false
-      show_player_cards(data['cardStash'], false, true, 0)
+      show_player_cards(data['cardStash'], 0, true, 0)
       discarded_cards(data['discardedStash'], true)
     }
 
