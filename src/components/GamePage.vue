@@ -17,11 +17,11 @@
               <div class="row">
                 <div class="col-3">
                   Neue Karte:<br>
-                  <p id="newCard"></p><br>
+                  <canvas height="150" width="100" id='newCard'></canvas>
                 </div>
                 <div class="col-3">
                   Offenliegende Karte:<br>
-                  <p id="openCard"></p><br>
+                  <canvas height="150" width="100" id='openCard'></canvas>
                 </div>
               </div>
               Karten des Spielers:<br><br>
@@ -174,12 +174,11 @@ export default {
 
       let newCard = data['newCard']
       let openCard = data['openCard']
-      let newCardDiv = document.getElementById("newCard")
-      let openCardDiv = document.getElementById("openCard")
-      newCardDiv.innerHTML = ""
-      openCardDiv.innerHTML = ""
-      newCardDiv.appendChild(drawCard(newCard['value'], newCard['color']))
-      openCardDiv.appendChild(drawCard(openCard['value'], openCard['color']))
+      let newCardCanvas = document.getElementById("newCard")
+      let openCardCanvas = document.getElementById("openCard")
+
+      drawCard(newCard.value, newCard.color, newCardCanvas)
+      drawCard(openCard.value, openCard.color, openCardCanvas)
 
       document.getElementById("currentPlayer").innerHTML = get_player_name(data['activePlayer'])
       document.getElementById("inputFormSwitch").hidden = false
