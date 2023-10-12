@@ -4,7 +4,12 @@
     <div class="row" v-else>
       <p>i</p>
       <div class="col" v-for="(_,j) in cards[i].length" :key="j">
-        <canvas v-for="(_,k) in cards[i][j].length" :key="k" height="150" width="100" v-bind:id="'discarded_card_' + i + '_' + j + '_' + k"></canvas>
+        <input type="radio" v-if="showRadioButtons==true" v-bind:id="'injectTo_radiobutton_' + i + '_'+ j + '_FRONT'"
+               name="discardedCardToggleGroup" :value="i + '_' + j + '_FRONT'">
+        <canvas v-for="(_,k) in cards[i][j].length" :key="k" height="150" width="100"
+                v-bind:id="'discarded_card_' + i + '_' + j + '_' + k"></canvas>
+        <input type="radio" v-if="showRadioButtons==true" v-bind:id="'injectTo_radiobutton_' + i + '_'+ j + '_AFTER'"
+               name="discardedCardToggleGroup" :value="i + '_' + j + '_AFTER'">
       </div>
     </div>
   </div>

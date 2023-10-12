@@ -11,8 +11,8 @@ export default {
   name: "InjectForm",
   mounted() {
     function inject() {
-      let card_to_inject = parseInt(document.querySelector('input[name="card_index"]:checked').value)
-      let target = document.querySelector('input[name="inject_to"]:checked').value.split("_")
+      let card_to_inject = parseInt(document.querySelector('input[name="playerCardToggleGroup"]:checked').value)
+      let target = document.querySelector('input[name=discardedCardToggleGroup]:checked').value.split("_")
       let player_to = parseInt(target[0])
       let group_to = parseInt(target[1])
       let position_to = target[2]
