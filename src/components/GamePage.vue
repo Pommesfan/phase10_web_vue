@@ -10,6 +10,7 @@
       <div class="row">
         <form id="cardstash">
           <div id="discardedCards" class="row w-100">
+            <DiscardedCards :key="discardedCards" :cards="discardedCards" :showRadioButtons="radioButtonsDiscardedCards"></DiscardedCards>
           </div>
           <div class="crow-100">
             <div>
@@ -81,16 +82,19 @@ import DiscardForm from "@/components/InputForms/DiscardForm";
 import {connectWebSocket} from "@/mixins/handleWebSocket";
 import {drawCard} from "@/mixins/utils"
 import PlayerCards from "@/components/OutputForms/PlayerCards";
+import DiscardedCards from "@/components/OutputForms/DiscardedCards.vue";
 
 export default {
   name: "GamePage",
-  components: {PlayerCards, DiscardForm, InjectForm, SwitchCardForm, NavBar},
+  components: {DiscardedCards, PlayerCards, DiscardForm, InjectForm, SwitchCardForm, NavBar},
   data() {
     return {
       playerCards: [],
       checkboxesPlayerCards: 0,
       radioButtonsPlayerCards: false,
       cardGroupSize: 0,
+      discardedCards: [],
+      radioButtonsDiscardedCards: false
     }
   },
   mounted() {
@@ -108,46 +112,9 @@ export default {
       GamePageRef.cardGroupSize = cardGroupSize
     }
 
-    function radio_buttons_discarded_Cards(i,j,position) {
-      let radioButton = document.createElement("input")
-      radioButton.type = "radio"
-      radioButton.name = "inject_to"
-      radioButton.value = i + "_" + j + "_" + position
-      return radioButton
-    }
-
     function discarded_cards(cardStashes, show_radio_buttons) {
-      let discardedCardsDiv = document.getElementById("discardedCards")
-      discardedCardsDiv.innerHTML = ""
-      for (let i = 0; i < cardStashes.length; i++) {
-        let textView = document.createElement("p")
-        textView.innerHTML = get_player_name(i)
-        discardedCardsDiv.appendChild(textView)
-        let cardGroups = cardStashes[i]
-        if (cardGroups == null) {
-          let textView2 = document.createElement("p")
-          textView2.innerHTML = "Keine Karten"
-          discardedCardsDiv.appendChild(textView2)
-        } else {
-          for(let j = 0; j < cardGroups.length; j++) {
-            let cards = cardGroups[j]
-
-            if(show_radio_buttons) {
-              discardedCardsDiv.appendChild(radio_buttons_discarded_Cards(i,j,"AFTER"))
-            }
-
-            for (let c in cards) {
-              let card = cards[c]
-              let cardView = drawCard(card['value'], card['color'])
-              discardedCardsDiv.appendChild(cardView)
-            }
-
-            if(show_radio_buttons) {
-              discardedCardsDiv.appendChild(radio_buttons_discarded_Cards(i,j,"AFTER"))
-            }
-          }
-        }
-      }
+      GamePageRef.discardedCards = cardStashes
+      GamePageRef.radioButtonsDiscardedCards = show_radio_buttons
     }
 
     function new_round_message(data) {
