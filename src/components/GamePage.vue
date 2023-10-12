@@ -166,18 +166,25 @@ export default {
       discarded_cards(data['discardedStash'], true)
     }
 
+    function newGame(data) {
+      let msg = "Neues Spiel\nPhase " + data['numberOfPhase'] + ": " + data['phaseDescription'] + "\nSpieler:"
+
+      let names = data['players']
+      const len = data['numberOfPlayers']
+      for(let i = 0; i < len; i++) {
+        sessionStorage.setItem("player_" + i, names[i])
+        msg += "\n" + names[i]
+      }
+      sessionStorage.setItem("number_of_players", len)
+
+      alert(msg)
+    }
+
     function update(data) {
       let event = data['event']
-      if(event == "sendPlayerNames") {
-        let names = data['players']
-        for(let i = 0; i < data['length']; i++) {
-          sessionStorage.setItem("player_" + i, names[i])
-        }
-      }
       if (event == "GoToDiscardEvent") {
         goToDiscard(data)
       } else if(event == "NewRoundEvent") {
-        turnEnded(data)
         alert(new_round_message(data))
       } else if(data['event'] == "TurnEndedEvent") {
         turnEnded(data)
@@ -186,9 +193,8 @@ export default {
         playersTurn(data)
       } else if (event == "GoToInjectEvent") {
         goToInject(data)
-      } else if (event == "GameStartedEvent") {
-        playersTurn(data)
-        alert(new_round_message(data))
+      }  else if (event == "NewGameEvent") {
+        newGame(data)
       }
     }
   }
