@@ -80,7 +80,7 @@ import SwitchCardForm from "@/components/InputForms/SwitchCardForm";
 import InjectForm from "@/components/InputForms/InjectForm";
 import DiscardForm from "@/components/InputForms/DiscardForm";
 import {connectWebSocket} from "@/mixins/handleWebSocket";
-import {drawCard} from "@/mixins/utils"
+import {drawCard, get_player_name} from "@/mixins/utils"
 import PlayerCards from "@/components/OutputForms/PlayerCards";
 import DiscardedCards from "@/components/OutputForms/DiscardedCards.vue";
 
@@ -100,10 +100,6 @@ export default {
   mounted() {
     const GamePageRef = this
     connectWebSocket(update)
-
-    function get_player_name(idx) {
-      return sessionStorage.getItem("player_" + idx)
-    }
 
     function show_player_cards(cards, number_checkboxes, show_radio_buttons, cardGroupSize) {
       GamePageRef.playerCards = cards
@@ -130,6 +126,7 @@ export default {
 
     function turnEnded(data) {
       show_player_cards(data['cardStash'], 0, false, data['card_group_size'])
+      discarded_cards(data['discardedStash'], false)
       document.getElementById("inputFormSwitch").hidden = true
       document.getElementById("inputFormDiscard").hidden = true
       document.getElementById("inputFormInject").hidden = true

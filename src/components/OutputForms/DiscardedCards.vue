@@ -2,7 +2,7 @@
   <div v-for="(_, i) in cards.length" :key="i">
     {{get_player_name(i)}}
     <div class="row" v-if="cards[i] == None">
-      <p>Keine Karte</p>
+      <p>Keine Karten</p>
     </div>
     <div class="row" v-else>
       <div class="col" v-for="(_,j) in cards[i].length" :key="j">
