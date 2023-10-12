@@ -99,12 +99,12 @@ export default {
     document.getElementById("submit_admission").onclick = submit_admission
 
     function post_data(route, json) {
-      fetch("http://localhost:9000" + route, {
+      fetch("http://" + location.hostname + ":9000" + route, {
         method: 'POST',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': 'http://localhost:8080',
+          'Access-Control-Allow-Origin': location.hostname + ':8080',
         },
         body: JSON.stringify(json)
       }).then(response => response.json().then(data => update(data)))
