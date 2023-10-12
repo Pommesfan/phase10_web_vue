@@ -83,6 +83,7 @@ import {connectWebSocket} from "@/mixins/handleWebSocket";
 import {drawCard, get_player_name} from "@/mixins/utils"
 import PlayerCards from "@/components/OutputForms/PlayerCards";
 import DiscardedCards from "@/components/OutputForms/DiscardedCards.vue";
+import router from "@/router";
 
 export default {
   name: "GamePage",
@@ -98,6 +99,10 @@ export default {
     }
   },
   mounted() {
+    if(sessionStorage.getItem("thisPlayer") == null) {
+      router.push({path : "/"})
+    }
+
     const GamePageRef = this
     connectWebSocket(update)
 

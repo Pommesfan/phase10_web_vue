@@ -36,13 +36,18 @@
     </div>
   </div>
   <div>
-    <router-link to="/"> Zurück zu Spiel </router-link>
+    <button id="back_from_about" type="submit" class="btn btn-primary">Zurück</button>
   </div>
 </template>
 
 <script>
+import {back_to_home_or_game} from "@/mixins/utils";
+
 export default {
-  name: "AboutPage"
+  name: "AboutPage",
+  mounted() {
+    document.getElementById("back_from_about").onclick = back_to_home_or_game
+  }
 }
 </script>
 

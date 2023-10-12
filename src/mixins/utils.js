@@ -1,3 +1,5 @@
+import router from "@/router";
+
 export function drawCard(number, color, c) {
     function getColor() {
         switch (color) {
@@ -91,4 +93,12 @@ export function drawCard(number, color, c) {
 
 export function get_player_name(idx) {
     return sessionStorage.getItem("player_" + idx)
+}
+
+export function back_to_home_or_game() {
+    if(sessionStorage.getItem('thisPlayer') == null) {
+        router.push({path : "/"})
+    } else {
+        router.push({path : "/game"})
+    }
 }
