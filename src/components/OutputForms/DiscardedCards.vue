@@ -1,8 +1,10 @@
 <template>
   <div v-for="(_, i) in cards.length" :key="i">
-    <p v-if="cards[i] == None">Keine Karte</p>
+    {{get_player_name(i)}}
+    <div class="row" v-if="cards[i] == None">
+      <p>Keine Karte</p>
+    </div>
     <div class="row" v-else>
-      <p>i</p>
       <div class="col" v-for="(_,j) in cards[i].length" :key="j">
         <input type="radio" v-if="showRadioButtons==true" v-bind:id="'injectTo_radiobutton_' + i + '_'+ j + '_FRONT'"
                name="discardedCardToggleGroup" :value="i + '_' + j + '_FRONT'">
@@ -17,10 +19,11 @@
 
 <script>
 
-import {drawCard} from "@/mixins/utils";
+import {drawCard, get_player_name} from "@/mixins/utils";
 
 export default {
   name: "DiscardedCards",
+  methods: {get_player_name},
   props: ["cards", "showRadioButtons"],
   mounted() {
     let cards = this.cards

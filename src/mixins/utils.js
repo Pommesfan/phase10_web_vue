@@ -88,3 +88,7 @@ export function drawCard(number, color, c) {
     cutEdge(100, 125, 100, 150, 75, 150)
     return c
 }
+
+export function get_player_name(idx) {
+    return sessionStorage.getItem("player_" + idx)
+}
