@@ -15,7 +15,7 @@
           <div class="crow-100">
             <div>
               Aktueller Spieler: <p id="currentPlayer"></p><br>
-              <div class="row">
+              <div class="row" id="new_open_div" hidden>
                 <div class="col-3">
                   Neue Karte:<br>
                   <canvas height="150" width="100" id='newCard'></canvas>
@@ -135,6 +135,7 @@ export default {
       document.getElementById("inputFormSwitch").hidden = true
       document.getElementById("inputFormDiscard").hidden = true
       document.getElementById("inputFormInject").hidden = true
+      document.getElementById("new_open_div").hidden = true
     }
 
     function playersTurn(data) {
@@ -150,15 +151,18 @@ export default {
       drawCard(openCard.value, openCard.color, openCardCanvas)
 
       document.getElementById("currentPlayer").innerHTML = get_player_name(data['activePlayer'])
+
       document.getElementById("inputFormSwitch").hidden = false
       document.getElementById("inputFormDiscard").hidden = true
       document.getElementById("inputFormInject").hidden = true
+      document.getElementById("new_open_div").hidden = false
     }
 
     function goToDiscard(data) {
       show_player_cards(data['cardStash'], data['card_group_size'], false, data['card_group_size'])
       document.getElementById("inputFormSwitch").hidden = true
       document.getElementById("inputFormDiscard").hidden = false
+      document.getElementById("new_open_div").hidden = true
     }
 
     function goToInject(data) {
@@ -166,6 +170,7 @@ export default {
       document.getElementById("inputFormInject").hidden = false
       show_player_cards(data['cardStash'], 0, true, 0)
       discarded_cards(data['discardedStash'], true)
+      document.getElementById("new_open_div").hidden = true
     }
 
     function newGame(data) {
