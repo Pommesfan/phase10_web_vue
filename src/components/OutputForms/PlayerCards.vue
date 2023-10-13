@@ -3,8 +3,11 @@
     <div class="col" v-for="(_, idx_card) in cards.length" :key="idx_card">
       <canvas height="150" width="100" v-bind:id="'player_card_' + idx_card"></canvas>
       <br>
-      <input type="checkbox" v-for="(_, idx_checkbox) in checkboxes" :key="idx_checkbox"
-             v-bind:id="'player_card_checkbox_' + idx_checkbox + '_' + idx_card" class="form-check-input">
+      <div v-for="(_, idx_checkbox) in checkboxes" :key="idx_checkbox">
+        <br>
+        <input type="checkbox" :key="idx_checkbox"
+               v-bind:id="'player_card_checkbox_' + idx_checkbox + '_' + idx_card" class="form-check-input">
+      </div>
       <input type="radio" v-if="showRadioButtons==true" v-bind:id="'player_card_radio_button_' + idx_card"
              name="playerCardToggleGroup" :value="idx_card" class="form-check-input">
     </div>
