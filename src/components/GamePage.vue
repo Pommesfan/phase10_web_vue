@@ -106,6 +106,11 @@ export default {
     const GamePageRef = this
     connectWebSocket(update)
 
+    const inputFormSwitch = document.getElementById("inputFormSwitch")
+    const inputFormDiscard = document.getElementById("inputFormDiscard")
+    const inputFormInject = document.getElementById("inputFormInject")
+    const new_open_div = document.getElementById("new_open_div")
+
     function show_player_cards(cards, number_checkboxes, show_radio_buttons, cardGroupSize) {
       GamePageRef.playerCards = cards
       GamePageRef.checkboxesPlayerCards = number_checkboxes
@@ -152,25 +157,25 @@ export default {
 
       document.getElementById("currentPlayer").innerHTML = get_player_name(data['activePlayer'])
 
-      document.getElementById("inputFormSwitch").hidden = false
-      document.getElementById("inputFormDiscard").hidden = true
-      document.getElementById("inputFormInject").hidden = true
-      document.getElementById("new_open_div").hidden = false
+      inputFormSwitch.hidden = false
+      inputFormDiscard.hidden = true
+      inputFormInject.hidden = true
+      new_open_div.hidden = false
     }
 
     function goToDiscard(data) {
       show_player_cards(data['cardStash'], data['card_group_size'], false, data['card_group_size'])
-      document.getElementById("inputFormSwitch").hidden = true
-      document.getElementById("inputFormDiscard").hidden = false
-      document.getElementById("new_open_div").hidden = true
+      inputFormSwitch.hidden = true
+      inputFormDiscard.hidden = false
+      new_open_div.hidden = true
     }
 
     function goToInject(data) {
-      document.getElementById("inputFormSwitch").hidden = true
-      document.getElementById("inputFormInject").hidden = false
       show_player_cards(data['cardStash'], 0, true, 0)
       discarded_cards(data['discardedStash'], true)
-      document.getElementById("new_open_div").hidden = true
+      inputFormSwitch.hidden = true
+      inputFormInject.hidden = false
+      new_open_div.hidden = true
     }
 
     function newGame(data) {
