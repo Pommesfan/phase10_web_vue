@@ -137,10 +137,10 @@ export default {
     function turnEnded(data) {
       show_player_cards(data['cardStash'], 0, false, data['card_group_size'])
       discarded_cards(data['discardedStash'], false)
-      document.getElementById("inputFormSwitch").hidden = true
-      document.getElementById("inputFormDiscard").hidden = true
-      document.getElementById("inputFormInject").hidden = true
-      document.getElementById("new_open_div").hidden = true
+      inputFormSwitch.hidden = true
+      inputFormDiscard.hidden = true
+      inputFormInject.hidden = true
+      new_open_div.hidden = true
     }
 
     function playersTurn(data) {

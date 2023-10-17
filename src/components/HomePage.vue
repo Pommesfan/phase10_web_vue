@@ -62,6 +62,7 @@
 <script>
 import router from "@/router";
 import NavBar from "@/components/NavBar";
+import {post_data} from "@/mixins/utils";
 export default {
   name: "HomePage",
   components: {NavBar},
@@ -78,17 +79,21 @@ export default {
         }
       }
       sessionStorage.setItem("number_of_players", names.length)
-      sessionStorage.setItem("thisPlayer", names[0])
+      set_own_name(names[0])
       if(names.length < 2) {
         alert("Mindestens zwei Spieler eingeben")
       } else {
-        post_data('/set_players', { "length":names.length, "names": names})
+        post_data('/set_players', { "length":names.length, "names": names}, update)
       }
     }
 
     function submit_admission() {
-      sessionStorage.setItem("thisPlayer", document.getElementById("admission_name").value)
+      set_own_name(document.getElementById("admission_name").value)
       update()
+    }
+
+    function set_own_name(name) {
+      sessionStorage.setItem("thisPlayer", name)
     }
 
     function update() {
@@ -97,18 +102,6 @@ export default {
 
     document.getElementById("submit_player_names").onclick = submit_player_names
     document.getElementById("submit_admission").onclick = submit_admission
-
-    function post_data(route, json) {
-      fetch("http://" + location.hostname + ":9000" + route, {
-        method: 'POST',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': location.hostname + ':8080',
-        },
-        body: JSON.stringify(json)
-      }).then(response => response.json().then(data => update(data)))
-    }
   }
 }
 </script>
