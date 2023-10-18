@@ -36,7 +36,7 @@
       <p>Der Spieler hat gewonnen der zuerst seine 10. Phase erfolgreich abgeschlossen hat.</p>
     </div>
   </div>
-  <div class="buttons">
+  <div>
     <button id="back_from_about" type="submit" class="btn btn-primary">Zurück</button>
   </div>
   </body>

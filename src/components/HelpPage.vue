@@ -29,7 +29,7 @@
       </p>
     </div>
   </div>
-  <div class="buttons">
+  <div>
     <button id="back_from_help" type="submit" class="btn btn-primary">Zurück</button>
   </div>
   </body>
