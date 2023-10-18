@@ -19,21 +19,22 @@
     <div class="phase">
       <h2>Phasen:</h2>
       <ol type="1">
-        <li>Drillinge</li>
-        <li> Drillinge & Viererfolge</li>
+        <li>Zwei Drillinge</li>
+        <li> Drilling & Viererfolge</li>
         <li>Vierling & Viererfolge</li>
-        <li>Siebernerfolge</li>
+        <li>Siebenerfolge</li>
         <li>Achterfolge</li>
         <li>Neunerfolge</li>
-        <li>2 Vierlinge</li>
-        <li>7 Karten einer Farbe</li>
+        <li>Zwei Vierlinge</li>
+        <li>Sieben Karten einer Farbe</li>
         <li>Fünfling & Zwilling</li>
         <li>Fünfling & Drilling</li>
       </ol>
     </div>
     <div class="gameend">
       <h2>Ziel des Spiels</h2>
-      <p>Der Spieler hat gewonnen der zuerst seine 10. Phase erfolgreich abgeschlossen hat.</p>
+      <p>Der Spieler hat gewonnen der zuerst seine 10. Phase erfolgreich abgeschlossen hat. Beim zeitgleichen Abschluss
+      der 10. Phase gilt, wer weniger Fehlerpunkte hat.</p>
     </div>
   </div>
   <div>
@@ -56,6 +57,7 @@ export default {
 <style scoped>
   body{
     background-image: -moz-linear-gradient(to right,#1f40e5, #c71717, #1f40e5);
+    height: fit-content;
   }
 
   h1{
@@ -71,13 +73,6 @@ export default {
 
   .intro{
     margin-bottom: 20px;
-  }
-
-  .buttons{
-    border: 1mm dashed #c71717;
-    border-radius: 10mm;
-    margin-top: 5mm;
-    bottom: auto;
   }
 
   .gameplay{
