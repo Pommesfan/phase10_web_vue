@@ -1,4 +1,5 @@
 <template>
+  <body>
   <div class="text">
     <h1>Hilfe zu Phase 10</h1>
     <div class="look">
@@ -28,9 +29,10 @@
       </p>
     </div>
   </div>
-  <div>
+  <div class="buttons">
     <button id="back_from_help" type="submit" class="btn btn-primary">Zurück</button>
   </div>
+  </body>
 </template>
 
 <script>
@@ -57,7 +59,7 @@ export default {
 
   .text{
     text-align: center;
-    color: black;
+    color: floralwhite;
   }
 
   .look{

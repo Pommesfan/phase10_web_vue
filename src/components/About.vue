@@ -1,4 +1,5 @@
 <template>
+  <body>
   <div class="text">
     <div class="intro">
       <h1>Phase 10</h1>
@@ -35,9 +36,10 @@
       <p>Der Spieler hat gewonnen der zuerst seine 10. Phase erfolgreich abgeschlossen hat.</p>
     </div>
   </div>
-  <div>
+  <div class="buttons">
     <button id="back_from_about" type="submit" class="btn btn-primary">Zurück</button>
   </div>
+  </body>
 </template>
 
 <script>
@@ -64,11 +66,18 @@ export default {
 
   .text{
     text-align: center;
-    color: black;
+    color: floralwhite;
   }
 
   .intro{
     margin-bottom: 20px;
+  }
+
+  .buttons{
+    border: 1mm dashed #c71717;
+    border-radius: 10mm;
+    margin-top: 5mm;
+    bottom: auto;
   }
 
   .gameplay{
