@@ -8,8 +8,8 @@
       <div class="col" v-for="(_,j) in cards[i].length" :key="j">
         <input type="radio" v-if="showRadioButtons==true" v-bind:id="'injectTo_radiobutton_' + i + '_'+ j + '_FRONT'"
                name="discardedCardToggleGroup" :value="i + '_' + j + '_FRONT'" class="form-check-input">
-        <canvas v-for="(_,k) in cards[i][j].length" :key="k" height="150" width="100"
-                v-bind:id="'discarded_card_' + i + '_' + j + '_' + k"></canvas>
+        <CardComponent v-for="(card,k) in cards[i][j]" :key="k" :id="'discarded_card_' + i + '_' + j + '_' + k"
+                :card="card"></CardComponent>
         <input type="radio" v-if="showRadioButtons==true" v-bind:id="'injectTo_radiobutton_' + i + '_'+ j + '_AFTER'"
                name="discardedCardToggleGroup" :value="i + '_' + j + '_AFTER'" class="form-check-input">
       </div>
@@ -19,26 +19,14 @@
 
 <script>
 
-import {drawCard, get_player_name} from "@/mixins/utils";
+import {get_player_name} from "@/mixins/utils";
+import CardComponent from "@/components/OutputForms/CardComponent.vue";
 
 export default {
   name: "DiscardedCards",
+  components: {CardComponent},
   methods: {get_player_name},
   props: ["cards", "showRadioButtons"],
-  mounted() {
-    let cards = this.cards
-    for(var i = 0; i < cards.length; i++) {
-      if(cards[i] != null) {
-        for(var j = 0; j < cards[i].length; j++) {
-          for(var k = 0; k < cards[i][j].length; k++) {
-            let card = cards[i][j][k]
-            let cardview = document.getElementById("discarded_card_" + i + "_" + j + "_" + k)
-            drawCard(card['value'], card['color'], cardview)
-          }
-        }
-      }
-    }
-  }
 }
 </script>
 

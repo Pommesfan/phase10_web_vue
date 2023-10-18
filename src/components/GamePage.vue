@@ -18,11 +18,11 @@
               <div class="row" id="new_open_div" hidden>
                 <div class="col-3">
                   Neue Karte:<br>
-                  <canvas height="150" width="100" id='newCard'></canvas>
+                  <CardComponent :card="newCardObj" :id="'newCard'" :key="newCardObj"></CardComponent>
                 </div>
                 <div class="col-3">
                   Offenliegende Karte:<br>
-                  <canvas height="150" width="100" id='openCard'></canvas>
+                  <CardComponent :card="openCardObj" :id="'openCard'" :key="openCardObj"></CardComponent>
                 </div>
               </div>
               Karten des Spielers:<br><br>
@@ -80,14 +80,15 @@ import SwitchCardForm from "@/components/InputForms/SwitchCardForm";
 import InjectForm from "@/components/InputForms/InjectForm";
 import DiscardForm from "@/components/InputForms/DiscardForm";
 import {connectWebSocket} from "@/mixins/handleWebSocket";
-import {drawCard, get_player_name} from "@/mixins/utils"
+import {get_player_name} from "@/mixins/utils"
 import PlayerCards from "@/components/OutputForms/PlayerCards";
 import DiscardedCards from "@/components/OutputForms/DiscardedCards.vue";
 import router from "@/router";
+import CardComponent from "@/components/OutputForms/CardComponent.vue";
 
 export default {
   name: "GamePage",
-  components: {DiscardedCards, PlayerCards, DiscardForm, InjectForm, SwitchCardForm, NavBar},
+  components: {CardComponent, DiscardedCards, PlayerCards, DiscardForm, InjectForm, SwitchCardForm, NavBar},
   data() {
     return {
       playerCards: [],
@@ -95,7 +96,9 @@ export default {
       radioButtonsPlayerCards: false,
       cardGroupSize: 0,
       discardedCards: [],
-      radioButtonsDiscardedCards: false
+      radioButtonsDiscardedCards: false,
+      newCardObj: null,
+      openCardObj:null
     }
   },
   mounted() {
@@ -147,13 +150,8 @@ export default {
       show_player_cards(data['cardStash'], 0, true, data['card_group_size'])
       discarded_cards(data['discardedStash'], false)
 
-      let newCard = data['newCard']
-      let openCard = data['openCard']
-      let newCardCanvas = document.getElementById("newCard")
-      let openCardCanvas = document.getElementById("openCard")
-
-      drawCard(newCard.value, newCard.color, newCardCanvas)
-      drawCard(openCard.value, openCard.color, openCardCanvas)
+      GamePageRef.newCardObj = data['newCard']
+      GamePageRef.openCardObj = data['openCard']
 
       document.getElementById("currentPlayer").innerHTML = get_player_name(data['activePlayer'])
 

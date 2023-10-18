@@ -1,7 +1,7 @@
 <template>
   <div class="row">
-    <div class="col" v-for="(_, idx_card) in cards.length" :key="idx_card">
-      <canvas height="150" width="100" v-bind:id="'player_card_' + idx_card"></canvas>
+    <div class="col" v-for="(cardObj, idx_card) in cards" :key="idx_card">
+      <CardComponent :key="cardObj" :card="cardObj" :id="'player_card_' + idx_card"></CardComponent>
       <br>
       <div v-for="(_, idx_checkbox) in checkboxes" :key="idx_checkbox">
         <br>
@@ -16,18 +16,12 @@
 
 <script>
 
-import {drawCard} from "@/mixins/utils";
+import CardComponent from "@/components/OutputForms/CardComponent.vue";
 
 export default {
   name: "PlayerCards",
+  components: {CardComponent},
   props: ["cards", "checkboxes", "showRadioButtons"],
-  mounted() {
-    for (var i = 0; i < this.cards.length; i++) {
-      let cardview = document.getElementById("player_card_" + i)
-      let card = this.cards[i]
-      drawCard(card['value'], card['color'], cardview)
-    }
-  }
 }
 
 </script>
