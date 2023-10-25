@@ -190,6 +190,12 @@ export default {
       alert(msg)
     }
 
+    function gameEnded(winningPlayer) {
+      sessionStorage.clear()
+      alert("Spieler " + winningPlayer + " hat gewonnen")
+      router.push({path : "/"})
+    }
+
     function update(data) {
       let event = data['event']
       if (event == "GoToDiscardEvent") {
@@ -205,6 +211,8 @@ export default {
         goToInject(data)
       }  else if (event == "NewGameEvent") {
         newGame(data)
+      } else if(event == "GameEndedEvent") {
+        gameEnded(data['winningPlayer'])
       }
     }
   }
