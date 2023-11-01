@@ -10,7 +10,10 @@ export default {
   name: "SwitchCardForm",
   mounted() {
     function switch_card(mode) {
-      let card_index = parseInt(document.querySelector('input[name="playerCardToggleGroup"]:checked').value)
+      let qs = document.querySelector('input[name="playerCardToggleGroup"]:checked')
+      if(qs == null)
+        return
+      let card_index = parseInt(qs.value)
       websocket.send(JSON.stringify({"cmd": "switch_cards", "mode": mode, "index": card_index}))
     }
 
