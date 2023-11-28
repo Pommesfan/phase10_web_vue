@@ -6,6 +6,7 @@
 
 <script>
 import {websocket} from "@/mixins/handleWebSocket";
+import {setSelectedPlayerCard, setSwitchMode} from "@/mixins/utils";
 export default {
   name: "SwitchCardForm",
   mounted() {
@@ -15,6 +16,8 @@ export default {
         return
       let card_index = parseInt(qs.value)
       websocket.send(JSON.stringify({"cmd": "switch_cards", "mode": mode, "index": card_index}))
+      setSelectedPlayerCard(card_index)
+      setSwitchMode(mode)
     }
 
     function new_card() {

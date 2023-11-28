@@ -80,7 +80,7 @@ import SwitchCardForm from "@/components/InputForms/SwitchCardForm";
 import InjectForm from "@/components/InputForms/InjectForm";
 import DiscardForm from "@/components/InputForms/DiscardForm";
 import {connectWebSocket} from "@/mixins/handleWebSocket";
-import {get_player_name} from "@/mixins/utils"
+import {get_player_name, selectedPlayerCard, switchMode} from "@/mixins/utils"
 import PlayerCards from "@/components/OutputForms/PlayerCards";
 import DiscardedCards from "@/components/OutputForms/DiscardedCards.vue";
 import router from "@/router";
@@ -102,6 +102,9 @@ export default {
     }
   },
   mounted() {
+    var newCard = null
+    var openCard = null
+
     if(sessionStorage.getItem("thisPlayer") == null) {
       router.push({path : "/"})
     }
@@ -114,18 +117,6 @@ export default {
     const inputFormInject = document.getElementById("inputFormInject")
     const new_open_div = document.getElementById("new_open_div")
 
-    function show_player_cards(cards, number_checkboxes, show_radio_buttons, cardGroupSize) {
-      GamePageRef.playerCards = cards
-      GamePageRef.checkboxesPlayerCards = number_checkboxes
-      GamePageRef.radioButtonsPlayerCards = show_radio_buttons
-      GamePageRef.cardGroupSize = cardGroupSize
-    }
-
-    function discarded_cards(cardStashes, show_radio_buttons) {
-      GamePageRef.discardedCards = cardStashes
-      GamePageRef.radioButtonsDiscardedCards = show_radio_buttons
-    }
-
     function new_round_message(data) {
       let s = "Neue Runde:"
       const errorPoints = data['errorPoints']
@@ -137,9 +128,7 @@ export default {
       return s
     }
 
-    function turnEnded(data) {
-      show_player_cards(data['cardStash'], 0, false, data['card_group_size'])
-      discarded_cards(data['discardedStash'], false)
+    function turnEnded() {
       inputFormSwitch.hidden = true
       inputFormDiscard.hidden = true
       inputFormInject.hidden = true
@@ -147,13 +136,12 @@ export default {
     }
 
     function playersTurn(data) {
-      show_player_cards(data['cardStash'], 0, true, data['card_group_size'])
-      discarded_cards(data['discardedStash'], false)
+      newCard = data['newCard']
+      openCard = data['openCard']
 
-      GamePageRef.newCardObj = data['newCard']
-      GamePageRef.openCardObj = data['openCard']
-
-      document.getElementById("currentPlayer").innerHTML = get_player_name(data['activePlayer'])
+      GamePageRef.newCardObj = newCard
+      GamePageRef.openCardObj = openCard
+      GamePageRef.radioButtonsPlayerCards = true
 
       inputFormSwitch.hidden = false
       inputFormDiscard.hidden = true
@@ -161,24 +149,25 @@ export default {
       new_open_div.hidden = false
     }
 
-    function goToDiscard(data) {
-      show_player_cards(data['cardStash'], data['card_group_size'], false, data['card_group_size'])
+    function goToDiscard() {
+      GamePageRef.playerCards[selectedPlayerCard] = switchMode == "new" ? newCard : openCard
+      GamePageRef.radioButtonsPlayerCards = false
       inputFormSwitch.hidden = true
       inputFormDiscard.hidden = false
       new_open_div.hidden = true
     }
 
-    function goToInject(data) {
-      show_player_cards(data['cardStash'], 0, true, 0)
-      discarded_cards(data['discardedStash'], true)
+    function goToInject() {
       inputFormSwitch.hidden = true
       inputFormInject.hidden = false
       new_open_div.hidden = true
     }
 
     function newGame(data) {
-      let msg = "Neues Spiel\nPhase " + data['numberOfPhase'] + ": " + data['phaseDescription'] + "\n\nSpieler:"
+      GamePageRef.playerCards = data['cardStash']
+      GamePageRef.cardGroupSize = data['card_group_size']
 
+      let msg = "Neues Spiel\nPhase " + data['numberOfPhase'] + ": " + data['phaseDescription'] + "\n\nSpieler:"
       let names = data['players']
       const len = data['numberOfPlayers']
       for(let i = 0; i < len; i++) {
@@ -213,9 +202,9 @@ export default {
         goToDiscard(data)
       } else if(event == "NewRoundEvent") {
         alert(new_round_message(data))
-      } else if(data['event'] == "TurnEndedEvent") {
+      } else if(event == "TurnEndedEvent") {
         turnEnded(data)
-      } else if(data['event'] == "PlayersTurnEvent") {
+      } else if(event == "PlayersTurnEvent") {
         alert("Du bist dran!")
         playersTurn(data)
       } else if (event == "GoToInjectEvent") {

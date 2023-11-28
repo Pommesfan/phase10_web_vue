@@ -22,3 +22,14 @@ export function post_data(route, json, update_function) {
         body: JSON.stringify(json)
     }).then(response => response.json().then(data => update_function(data)))
 }
+
+export var selectedPlayerCard = null
+export var switchMode = null
+
+export function setSelectedPlayerCard(v) {
+    selectedPlayerCard = v
+}
+
+export function setSwitchMode(v) {
+    switchMode = v
+}
