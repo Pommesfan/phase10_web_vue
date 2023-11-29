@@ -23,8 +23,27 @@ export function post_data(route, json, update_function) {
     }).then(response => response.json().then(data => update_function(data)))
 }
 
+export function inverted_idx_list(n, indices) {
+    let res = []
+    for(let i = 0; i < n; i++) {
+        if(!indices.includes(i)) {
+            res.push(i)
+        }
+    }
+    return res
+}
+
+export function map_cards(playerCardIndices, cards) {
+    let res = []
+    for(let i = 0; i < playerCardIndices.length; i++) {
+        res.push(cards[playerCardIndices[i]])
+    }
+    return res
+}
+
 export var selectedPlayerCard = null
 export var switchMode = null
+export var discardedCardIndices = []
 
 export function setSelectedPlayerCard(v) {
     selectedPlayerCard = v
@@ -32,4 +51,8 @@ export function setSelectedPlayerCard(v) {
 
 export function setSwitchMode(v) {
     switchMode = v
+}
+
+export function setDiscardedCardIndices(v) {
+    discardedCardIndices = v
 }

@@ -80,7 +80,7 @@ import SwitchCardForm from "@/components/InputForms/SwitchCardForm";
 import InjectForm from "@/components/InputForms/InjectForm";
 import DiscardForm from "@/components/InputForms/DiscardForm";
 import {connectWebSocket} from "@/mixins/handleWebSocket";
-import {get_player_name, selectedPlayerCard, switchMode} from "@/mixins/utils"
+import {get_player_name, inverted_idx_list, map_cards, discardedCardIndices, selectedPlayerCard, setDiscardedCardIndices, switchMode} from "@/mixins/utils"
 import PlayerCards from "@/components/OutputForms/PlayerCards";
 import DiscardedCards from "@/components/OutputForms/DiscardedCards.vue";
 import router from "@/router";
@@ -102,9 +102,6 @@ export default {
     }
   },
   mounted() {
-    var newCard = null
-    var openCard = null
-
     if(sessionStorage.getItem("thisPlayer") == null) {
       router.push({path : "/"})
     }
@@ -128,7 +125,37 @@ export default {
       return s
     }
 
-    function turnEnded() {
+    function load_discarded_cards() {
+      //copy player cards as discarded
+      let discarded_card_current_player = []
+      for(let i = 0; i < discardedCardIndices.length; i++) {
+        let indices = discardedCardIndices[i]
+        let cardGroup = []
+        for(let j = 0; j < indices.length; j++) {
+          let idx = indices[j]
+          cardGroup.push(GamePageRef.playerCards[idx])
+        }
+        discarded_card_current_player.push(cardGroup)
+      }
+      GamePageRef.discardedCards[sessionStorage.getItem("thisPlayerIdx")] = discarded_card_current_player
+
+      //remove player cards
+      let playerCardIndices = inverted_idx_list(10, discardedCardIndices.flat())
+      GamePageRef.playerCards = map_cards(playerCardIndices, GamePageRef.playerCards)
+      setDiscardedCardIndices([])
+    }
+
+    function turnEnded(data) {
+      let success = data['success']
+      if(success) {
+        if (discardedCardIndices.length > 0) {
+          load_discarded_cards()
+        }
+      } else {
+        alert("Ungültiger Spielzug")
+      }
+      GamePageRef.checkboxesPlayerCards = 0
+
       inputFormSwitch.hidden = true
       inputFormDiscard.hidden = true
       inputFormInject.hidden = true
@@ -136,11 +163,8 @@ export default {
     }
 
     function playersTurn(data) {
-      newCard = data['newCard']
-      openCard = data['openCard']
-
-      GamePageRef.newCardObj = newCard
-      GamePageRef.openCardObj = openCard
+      GamePageRef.newCardObj = data['newCard']
+      GamePageRef.openCardObj = data['openCard']
       GamePageRef.radioButtonsPlayerCards = true
 
       inputFormSwitch.hidden = false
@@ -150,8 +174,9 @@ export default {
     }
 
     function goToDiscard() {
-      GamePageRef.playerCards[selectedPlayerCard] = switchMode == "new" ? newCard : openCard
       GamePageRef.radioButtonsPlayerCards = false
+      GamePageRef.checkboxesPlayerCards = GamePageRef.cardGroupSize
+      GamePageRef.playerCards[selectedPlayerCard] = switchMode == "new" ? GamePageRef.newCardObj : GamePageRef.openCardObj
       inputFormSwitch.hidden = true
       inputFormDiscard.hidden = false
       new_open_div.hidden = true
@@ -169,12 +194,16 @@ export default {
 
       let msg = "Neues Spiel\nPhase " + data['numberOfPhase'] + ": " + data['phaseDescription'] + "\n\nSpieler:"
       let names = data['players']
-      const len = data['numberOfPlayers']
-      for(let i = 0; i < len; i++) {
+      const numberOfPlayers = data['numberOfPlayers']
+      const this_player = sessionStorage.getItem("thisPlayer")
+      for(let i = 0; i < numberOfPlayers; i++) {
         sessionStorage.setItem("player_" + i, names[i])
+        if(names[i] == this_player) {
+          sessionStorage.setItem("thisPlayerIdx", i)
+        }
         msg += "\n" + names[i]
       }
-      sessionStorage.setItem("number_of_players", len)
+      sessionStorage.setItem("number_of_players", numberOfPlayers)
 
       alert(msg)
     }
