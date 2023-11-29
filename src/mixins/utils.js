@@ -41,9 +41,22 @@ export function map_cards(playerCardIndices, cards) {
     return res
 }
 
+export class InjectCardData {
+    constructor(playerCard, playerTo, groupTo, positionTo) {
+        this.playerCard = playerCard
+        this.playerTo = playerTo
+        this.groupTo = groupTo
+        this.positionTo = positionTo
+    }
+}
+
+export const INJECT_TO_FRONT = 1
+export const INJECT_AFTER = 2
+
 export var selectedPlayerCard = null
 export var switchMode = null
 export var discardedCardIndices = []
+export var injectTo = null
 
 export function setSelectedPlayerCard(v) {
     selectedPlayerCard = v
@@ -55,4 +68,8 @@ export function setSwitchMode(v) {
 
 export function setDiscardedCardIndices(v) {
     discardedCardIndices = v
+}
+
+export function setInjectTo(v) {
+    injectTo = v
 }

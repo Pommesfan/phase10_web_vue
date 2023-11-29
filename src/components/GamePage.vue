@@ -80,7 +80,16 @@ import SwitchCardForm from "@/components/InputForms/SwitchCardForm";
 import InjectForm from "@/components/InputForms/InjectForm";
 import DiscardForm from "@/components/InputForms/DiscardForm";
 import {connectWebSocket} from "@/mixins/handleWebSocket";
-import {get_player_name, inverted_idx_list, map_cards, discardedCardIndices, selectedPlayerCard, setDiscardedCardIndices, switchMode} from "@/mixins/utils"
+import {
+  get_player_name,
+  inverted_idx_list,
+  map_cards,
+  discardedCardIndices,
+  selectedPlayerCard,
+  setDiscardedCardIndices,
+  switchMode,
+  setSelectedPlayerCard, injectTo, setInjectTo
+} from "@/mixins/utils"
 import PlayerCards from "@/components/OutputForms/PlayerCards";
 import DiscardedCards from "@/components/OutputForms/DiscardedCards.vue";
 import router from "@/router";
@@ -145,6 +154,21 @@ export default {
       setDiscardedCardIndices([])
     }
 
+    function load_injected_card() {
+      let idx = injectTo.playerCard
+      let card = GamePageRef.playerCards[idx]
+      let stashTo = GamePageRef.discardedCards[injectTo.playerTo][injectTo.groupTo]
+      let position_to = injectTo.positionTo
+      if(position_to == "FRONT") {
+        stashTo.unshift(card)
+      } else if(position_to == "AFTER") {
+        stashTo.push(card)
+      }
+      setInjectTo(null)
+      let inverted_idx = inverted_idx_list(GamePageRef.playerCards.length, [idx])
+      GamePageRef.playerCards = map_cards(inverted_idx, GamePageRef.playerCards)
+    }
+
     function turnEnded(data) {
       let success = data['success']
       if(success) {
@@ -183,6 +207,17 @@ export default {
     }
 
     function goToInject() {
+      GamePageRef.radioButtonsDiscardedCards = true
+
+      if(selectedPlayerCard != null) {
+        GamePageRef.playerCards[selectedPlayerCard] = switchMode == "new" ? GamePageRef.newCardObj : GamePageRef.openCardObj
+        setSelectedPlayerCard(null)
+      }
+
+      if(injectTo != null) {
+        load_injected_card()
+      }
+
       inputFormSwitch.hidden = true
       inputFormInject.hidden = false
       new_open_div.hidden = true
