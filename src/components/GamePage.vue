@@ -81,14 +81,8 @@ import InjectForm from "@/components/InputForms/InjectForm";
 import DiscardForm from "@/components/InputForms/DiscardForm";
 import {connectWebSocket} from "@/mixins/handleWebSocket";
 import {
-  get_player_name,
-  inverted_idx_list,
-  map_cards,
-  discardedCardIndices,
-  selectedPlayerCard,
-  setDiscardedCardIndices,
-  switchMode,
-  setSelectedPlayerCard, injectTo, setInjectTo
+  get_player_name, inverted_idx_list, map_cards, discardedCardIndices, selectedPlayerCard, setDiscardedCardIndices,
+  switchMode, setSelectedPlayerCard, injectTo, setInjectTo, INJECT_AFTER, INJECT_TO_FRONT
 } from "@/mixins/utils"
 import PlayerCards from "@/components/OutputForms/PlayerCards";
 import DiscardedCards from "@/components/OutputForms/DiscardedCards.vue";
@@ -122,17 +116,6 @@ export default {
     const inputFormDiscard = document.getElementById("inputFormDiscard")
     const inputFormInject = document.getElementById("inputFormInject")
     const new_open_div = document.getElementById("new_open_div")
-
-    function new_round_message(data) {
-      let s = "Neue Runde:"
-      const errorPoints = data['errorPoints']
-      const number_of_phase = data['numberOfPhase']
-      const phase_description = data['phaseDescription']
-      for(let i = 0; i < sessionStorage.getItem("number_of_players"); i++) {
-        s += ("\n" + get_player_name(i) + ": " + errorPoints[i] + " Fehlerpunkte; Phase: " + number_of_phase[i] + ": " + phase_description[i])
-      }
-      return s
-    }
 
     function load_discarded_cards() {
       //copy player cards as discarded
@@ -179,6 +162,8 @@ export default {
         alert("Ungültiger Spielzug")
       }
       GamePageRef.checkboxesPlayerCards = 0
+      GamePageRef.radioButtonsDiscardedCards = false
+      GamePageRef.radioButtonsPlayerCards = false
 
       inputFormSwitch.hidden = true
       inputFormDiscard.hidden = true
@@ -243,7 +228,24 @@ export default {
       alert(msg)
     }
 
+    function new_round(data) {
+      const number_of_players= sessionStorage.getItem("number_of_players")
+      GamePageRef.discardedCards = new Array(parseInt(number_of_players)).fill(null)
+      GamePageRef.playerCards = data['cardStash']
+      GamePageRef.cardGroupSize = data['card_group_size']
+
+      let s = "Neue Runde:"
+      const errorPoints = data['errorPoints']
+      const number_of_phase = data['numberOfPhase']
+      const phase_description = data['phaseDescription']
+      for(let i = 0; i < number_of_players; i++) {
+        s += ("\n" + get_player_name(i) + ": " + errorPoints[i] + " Fehlerpunkte; Phase: " + number_of_phase[i] + ": " + phase_description[i])
+      }
+      alert(s)
+    }
+
     function gameEnded(data) {
+      //Message
       let msg = "Spieler " + data['winningPlayer'] + " hat gewonnen\n"
 
       const length = sessionStorage.getItem("number_of_players")
@@ -265,12 +267,26 @@ export default {
       GamePageRef.discardedCards[playerTo] = data['cards']
     }
 
+    function playerHasInjected(data) {
+      let idxPlayerTo = data["playerTo"]
+      let idxStashTo = data["stashTo"]
+      let position = data["position"]
+      let card = data["card"]
+
+      let stashTo = GamePageRef.discardedCards[idxPlayerTo][idxStashTo]
+      if (position == INJECT_TO_FRONT) {
+        stashTo.unshift(card)
+      } else if(position == INJECT_AFTER) {
+        stashTo.push(card)
+      }
+    }
+
     function update(data) {
       let event = data['event']
       if (event == "GoToDiscardEvent") {
         goToDiscard(data)
       } else if(event == "NewRoundEvent") {
-        alert(new_round_message(data))
+        new_round(data)
       } else if(event == "TurnEndedEvent") {
         turnEnded(data)
       } else if(event == "PlayersTurnEvent") {
@@ -284,6 +300,8 @@ export default {
         gameEnded(data)
       }  else if(event == "PlayerHasDiscarded") {
         playerHasDiscarded(data)
+      } else if(event == "PlayerHasInjected") {
+        playerHasInjected(data)
       }
     }
   }
