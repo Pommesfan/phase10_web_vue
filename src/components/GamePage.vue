@@ -14,7 +14,7 @@
           </div>
           <div class="crow-100">
             <div>
-              Aktueller Spieler: <p id="currentPlayer"></p><br>
+              <p id="currentPlayerAndPhase"></p><br>
               <div class="row" id="new_open_div" hidden>
                 <div class="col-3">
                   Neue Karte:<br>
@@ -153,12 +153,14 @@ export default {
     }
 
     function turnEnded(data) {
+      fullLoad(data)
       let success = data['success']
       if(success) {
         if (discardedCardIndices.length > 0) {
           load_discarded_cards()
         }
       } else {
+        setInjectTo(null)
         alert("Ungültiger Spielzug")
       }
       GamePageRef.checkboxesPlayerCards = 0
@@ -172,6 +174,7 @@ export default {
     }
 
     function playersTurn(data) {
+      fullLoad(data)
       GamePageRef.newCardObj = data['newCard']
       GamePageRef.openCardObj = data['openCard']
       GamePageRef.radioButtonsPlayerCards = true
@@ -182,7 +185,8 @@ export default {
       new_open_div.hidden = false
     }
 
-    function goToDiscard() {
+    function goToDiscard(data) {
+      fullLoad(data)
       GamePageRef.radioButtonsPlayerCards = false
       GamePageRef.checkboxesPlayerCards = GamePageRef.cardGroupSize
       GamePageRef.playerCards[selectedPlayerCard] = switchMode == "new" ? GamePageRef.newCardObj : GamePageRef.openCardObj
@@ -191,8 +195,10 @@ export default {
       new_open_div.hidden = true
     }
 
-    function goToInject() {
+    function goToInject(data) {
+      fullLoad(data)
       GamePageRef.radioButtonsDiscardedCards = true
+      GamePageRef.radioButtonsPlayerCards = true
 
       if(selectedPlayerCard != null) {
         GamePageRef.playerCards[selectedPlayerCard] = switchMode == "new" ? GamePageRef.newCardObj : GamePageRef.openCardObj
@@ -209,10 +215,11 @@ export default {
     }
 
     function newGame(data) {
+      setPhaseAndPlayers(data)
       GamePageRef.playerCards = data['cardStash']
       GamePageRef.cardGroupSize = data['card_group_size']
 
-      let msg = "Neues Spiel\nPhase " + data['numberOfPhase'] + ": " + data['phaseDescription'] + "\n\nSpieler:"
+      let msg = "Neues Spiel\nPhase " + data['numberOfPhase'][0] + ": " + data['phaseDescription'][0] + "\n\nSpieler:"
       let names = data['players']
       const numberOfPlayers = data['numberOfPlayers']
       const this_player = sessionStorage.getItem("thisPlayer")
@@ -229,6 +236,7 @@ export default {
     }
 
     function new_round(data) {
+      setPhaseAndPlayers(data)
       const number_of_players= sessionStorage.getItem("number_of_players")
       GamePageRef.discardedCards = new Array(parseInt(number_of_players)).fill(null)
       GamePageRef.playerCards = data['cardStash']
@@ -278,6 +286,24 @@ export default {
         stashTo.unshift(card)
       } else if(position == INJECT_AFTER) {
         stashTo.push(card)
+      }
+    }
+
+    function setPhaseAndPlayers(data) {
+      let idx_player = parseInt(sessionStorage.getItem('thisPlayerIdx'))
+      let currentPlayer = sessionStorage.getItem("player_" + idx_player)
+      let n = data['numberOfPhase'][idx_player]
+      let description = data['phaseDescription'][idx_player]
+      document.getElementById("currentPlayerAndPhase").innerHTML =
+          "Aktueller Spieler: " + currentPlayer + "; Phase " + n + ": " + description
+    }
+
+    function fullLoad(data) {
+      if(data['fullLoad']) {
+        GamePageRef.playerCards = data['cardStash']
+        GamePageRef.discardedCards = data['discardedStash']
+        GamePageRef.cardGroupSize = data['card_group_size']
+        setPhaseAndPlayers(data)
       }
     }
 
