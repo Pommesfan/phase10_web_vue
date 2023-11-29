@@ -225,6 +225,11 @@ export default {
       router.push({path : "/"})
     }
 
+    function playerHasDiscarded(data) {
+      const playerTo = data['player']
+      GamePageRef.discardedCards[playerTo] = data['cards']
+    }
+
     function update(data) {
       let event = data['event']
       if (event == "GoToDiscardEvent") {
@@ -242,6 +247,8 @@ export default {
         newGame(data)
       } else if(event == "GameEndedEvent") {
         gameEnded(data)
+      }  else if(event == "PlayerHasDiscarded") {
+        playerHasDiscarded(data)
       }
     }
   }
