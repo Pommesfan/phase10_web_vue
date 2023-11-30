@@ -103,6 +103,7 @@ export default {
   mounted() {
     if(sessionStorage.getItem("thisPlayer") == null) {
       router.push({path : "/"})
+      return
     }
 
     const GamePageRef = this

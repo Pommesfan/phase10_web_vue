@@ -43,6 +43,6 @@ export default {
     float: left;
     overflow: hidden;
     height: 1px;
-    width: 10px;
+    width: 15px;
   }
 </style>
