@@ -211,25 +211,34 @@ export default {
       new_open_div.hidden = true
     }
 
+    function loadPlayers(data) {
+      let names = data['players']
+      const numberOfPlayers = data['numberOfPlayers']
+      const thisPlayer = sessionStorage.getItem('thisPlayer')
+      for(let i = 0; i < numberOfPlayers; i++) {
+        sessionStorage.setItem("player_" + i, names[i])
+        if(names[i] == thisPlayer)
+          sessionStorage.setItem("thisPlayerIdx", i)
+      }
+      sessionStorage.setItem("number_of_players", numberOfPlayers)
+    }
+
+    function newGameMessage(data) {
+      let msg = "Neues Spiel\nPhase " + data['numberOfPhase'][0] + ": " + data['phaseDescription'][0] + "\n\nSpieler:"
+      const numberOfPlayers = sessionStorage.getItem("number_of_players")
+      for(let i = 0; i < numberOfPlayers; i++) {
+        let name = sessionStorage.getItem("player_" + i)
+        msg += "\n" + name
+      }
+      alert(msg)
+    }
+
     function newGame(data) {
+      loadPlayers(data)
       setPhaseAndPlayers(data)
       GamePageRef.playerCards = data['cardStash']
       GamePageRef.cardGroupSize = data['card_group_size']
-
-      let msg = "Neues Spiel\nPhase " + data['numberOfPhase'][0] + ": " + data['phaseDescription'][0] + "\n\nSpieler:"
-      let names = data['players']
-      const numberOfPlayers = data['numberOfPlayers']
-      const this_player = sessionStorage.getItem("thisPlayer")
-      for(let i = 0; i < numberOfPlayers; i++) {
-        sessionStorage.setItem("player_" + i, names[i])
-        if(names[i] == this_player) {
-          sessionStorage.setItem("thisPlayerIdx", i)
-        }
-        msg += "\n" + names[i]
-      }
-      sessionStorage.setItem("number_of_players", numberOfPlayers)
-
-      alert(msg)
+      newGameMessage(data)
     }
 
     function new_round(data) {
@@ -288,7 +297,7 @@ export default {
 
     function setPhaseAndPlayers(data) {
       let idx_player = parseInt(sessionStorage.getItem('thisPlayerIdx'))
-      let currentPlayer = sessionStorage.getItem("player_" + idx_player)
+      let currentPlayer = sessionStorage.getItem("thisPlayer")
       let n = data['numberOfPhase'][idx_player]
       let description = data['phaseDescription'][idx_player]
       document.getElementById("currentPlayerAndPhase").innerHTML =
@@ -300,6 +309,7 @@ export default {
         GamePageRef.playerCards = data['cardStash']
         GamePageRef.discardedCards = data['discardedStash']
         GamePageRef.cardGroupSize = data['card_group_size']
+        loadPlayers(data)
         setPhaseAndPlayers(data)
       }
     }
