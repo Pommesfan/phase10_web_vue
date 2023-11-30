@@ -7,9 +7,7 @@
     </div>
 
     <div class="container-fluid">
-      <div class="row">
-        <form id="cardstash">
-          <div id="discardedCards" class="row w-100">
+          <div id="discardedCards" class="row">
             <DiscardedCards :key="discardedCards" :cards="discardedCards" :showRadioButtons="radioButtonsDiscardedCards"></DiscardedCards>
           </div>
           <div class="crow-100">
@@ -29,7 +27,6 @@
               <PlayerCards :key="playerCards" :cards=playerCards :checkboxes=checkboxesPlayerCards :show-radio-buttons=radioButtonsPlayerCards></PlayerCards>
             </div>
           </div>
-        </form>
       </div>
       <div class="row">
         <div class="col-xl-6">
@@ -71,7 +68,6 @@
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
