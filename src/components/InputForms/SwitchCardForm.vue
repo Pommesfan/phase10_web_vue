@@ -15,9 +15,11 @@ export default {
       if(qs == null)
         return
       let card_index = parseInt(qs.value)
-      websocket.send(JSON.stringify({"cmd": "switch_cards", "mode": mode, "index": card_index}))
+
+      qs.checked = false
       setSelectedPlayerCard(card_index)
       setSwitchMode(mode)
+      websocket.send(JSON.stringify({"cmd": "switch_cards", "mode": mode, "index": card_index}))
     }
 
     function new_card() {
