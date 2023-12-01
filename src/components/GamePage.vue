@@ -78,7 +78,7 @@ import DiscardForm from "@/components/InputForms/DiscardForm";
 import {connectWebSocket} from "@/mixins/handleWebSocket";
 import {
   get_player_name, inverted_idx_list, map_cards, discardedCardIndices, selectedPlayerCard, setDiscardedCardIndices,
-  switchMode, setSelectedPlayerCard, injectTo, setInjectTo, INJECT_AFTER, INJECT_TO_FRONT
+  switchMode, setSelectedPlayerCard, injectTo, setInjectTo, INJECT_AFTER, INJECT_TO_FRONT, sort_cards
 } from "@/mixins/utils"
 import PlayerCards from "@/components/OutputForms/PlayerCards";
 import DiscardedCards from "@/components/OutputForms/DiscardedCards.vue";
@@ -124,7 +124,7 @@ export default {
           let idx = indices[j]
           cardGroup.push(GamePageRef.playerCards[idx])
         }
-        discarded_card_current_player.push(cardGroup)
+        discarded_card_current_player.push(sort_cards(cardGroup))
       }
       GamePageRef.discardedCards[sessionStorage.getItem("thisPlayerIdx")] = discarded_card_current_player
 
