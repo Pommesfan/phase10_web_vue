@@ -65,6 +65,8 @@ export class InjectCardData {
 
 export const INJECT_TO_FRONT = 1
 export const INJECT_AFTER = 2
+export const NEW_CARD = 1
+export const OPEN_CARD = 2
 export const str_number_of_players = "number_of_players"
 export const str_thisPlayer = "thisPlayer"
 export const str_thisPlayerIdx = "thisPlayerIdx"

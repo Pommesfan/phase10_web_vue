@@ -22,7 +22,7 @@ export default {
       let target = target_qs.value.split("_")
       let player_to = parseInt(target[0])
       let group_to = parseInt(target[1])
-      let position_to = target[2]
+      let position_to = parseInt(target[2])
 
       card_to_inject_qs.checked = false
       target_qs.checked = false

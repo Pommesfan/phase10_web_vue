@@ -77,10 +77,9 @@ import InjectForm from "@/components/InputForms/InjectForm";
 import DiscardForm from "@/components/InputForms/DiscardForm";
 import {connectWebSocket} from "@/mixins/handleWebSocket";
 import {
-  get_player_name, inverted_idx_list, map_cards, discardedCardIndices,
-  selectedPlayerCard, setDiscardedCardIndices, switchMode,
-  setSelectedPlayerCard, injectTo, setInjectTo, INJECT_AFTER, INJECT_TO_FRONT,
-  sort_cards, str_thisPlayer, str_number_of_players, str_thisPlayerIdx
+  get_player_name, inverted_idx_list, map_cards, discardedCardIndices, selectedPlayerCard, setDiscardedCardIndices,
+  switchMode, setSelectedPlayerCard, injectTo, setInjectTo, INJECT_AFTER, INJECT_TO_FRONT, sort_cards, str_thisPlayer,
+  str_number_of_players, str_thisPlayerIdx, OPEN_CARD, NEW_CARD
 } from "@/mixins/utils"
 import PlayerCards from "@/components/OutputForms/PlayerCards";
 import DiscardedCards from "@/components/OutputForms/DiscardedCards.vue";
@@ -141,14 +140,22 @@ export default {
       let card = GamePageRef.playerCards[idx]
       let stashTo = GamePageRef.discardedCards[injectTo.playerTo][injectTo.groupTo]
       let position_to = injectTo.positionTo
-      if(position_to == "FRONT") {
+      if(position_to == INJECT_TO_FRONT) {
         stashTo.unshift(card)
-      } else if(position_to == "AFTER") {
+      } else if(position_to == INJECT_AFTER) {
         stashTo.push(card)
       }
       setInjectTo(null)
       let inverted_idx = inverted_idx_list(GamePageRef.playerCards.length, [idx])
       GamePageRef.playerCards = map_cards(inverted_idx, GamePageRef.playerCards)
+    }
+
+    function load_new_open() {
+      if(switchMode  == NEW_CARD) {
+        GamePageRef.playerCards[selectedPlayerCard] = GamePageRef.newCardObj
+      } else if (switchMode == OPEN_CARD) {
+        GamePageRef.playerCards[selectedPlayerCard] = GamePageRef.openCardObj
+      }
     }
 
     function turnEnded(data) {
@@ -188,7 +195,7 @@ export default {
       fullLoad(data)
       GamePageRef.radioButtonsPlayerCards = false
       GamePageRef.checkboxesPlayerCards = GamePageRef.cardGroupSize
-      GamePageRef.playerCards[selectedPlayerCard] = switchMode == "new" ? GamePageRef.newCardObj : GamePageRef.openCardObj
+      load_new_open()
       inputFormSwitch.hidden = true
       inputFormDiscard.hidden = false
       new_open_div.hidden = true
@@ -200,7 +207,7 @@ export default {
       GamePageRef.radioButtonsPlayerCards = true
 
       if(selectedPlayerCard != null) {
-        GamePageRef.playerCards[selectedPlayerCard] = switchMode == "new" ? GamePageRef.newCardObj : GamePageRef.openCardObj
+        load_new_open()
         setSelectedPlayerCard(null)
       }
 
@@ -221,7 +228,7 @@ export default {
       const thisPlayer = sessionStorage.getItem(str_thisPlayer)
       for(let i = 0; i < numberOfPlayers; i++) {
         sessionStorage.setItem("player_" + i, names[i])
-        if(names[i] != thisPlayer)
+        if(names[i] == thisPlayer)
           sessionStorage.setItem(str_thisPlayerIdx, i)
       }
       sessionStorage.setItem(str_number_of_players, numberOfPlayers)

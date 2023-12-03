@@ -6,7 +6,7 @@
 
 <script>
 import {websocket} from "@/mixins/handleWebSocket";
-import {setSelectedPlayerCard, setSwitchMode} from "@/mixins/utils";
+import {NEW_CARD, OPEN_CARD, setSelectedPlayerCard, setSwitchMode} from "@/mixins/utils";
 export default {
   name: "SwitchCardForm",
   mounted() {
@@ -23,11 +23,11 @@ export default {
     }
 
     function new_card() {
-      switch_card("new")
+      switch_card(NEW_CARD)
     }
 
     function open_card() {
-      switch_card("open")
+      switch_card(OPEN_CARD)
     }
 
     document.getElementById("btn_new_card").onclick = new_card

@@ -9,12 +9,12 @@
     <div v-for="(_,j) in cards[i].length" :key="j" class="d-inline-block" v-else>
       <div class="col">
         <div class="space"></div>
-        <input type="radio" v-if="showRadioButtons==true" v-bind:id="'injectTo_radiobutton_' + i + '_'+ j + '_FRONT'"
-               name="discardedCardToggleGroup" :value="i + '_' + j + '_FRONT'" class="form-check-input">
+        <input type="radio" v-if="showRadioButtons==true" v-bind:id="'injectTo_radiobutton_' + i + '_'+ j + '_1'"
+               name="discardedCardToggleGroup" :value="i + '_' + j + '_1'" class="form-check-input">
         <CardComponent v-for="(card,k) in cards[i][j]" :key="k" :id="'discarded_card_' + i + '_' + j + '_' + k"
                        :card="card"></CardComponent>
-        <input type="radio" v-if="showRadioButtons==true" v-bind:id="'injectTo_radiobutton_' + i + '_'+ j + '_AFTER'"
-               name="discardedCardToggleGroup" :value="i + '_' + j + '_AFTER'" class="form-check-input">
+        <input type="radio" v-if="showRadioButtons==true" v-bind:id="'injectTo_radiobutton_' + i + '_'+ j + '_2'"
+               name="discardedCardToggleGroup" :value="i + '_' + j + '_2'" class="form-check-input">
         <div class="space"></div>
       </div>
     </div>
