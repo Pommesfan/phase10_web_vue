@@ -76,7 +76,6 @@ export default {
           names.push(name)
         }
       }
-      sessionStorage.setItem("number_of_players", names.length)
       set_own_name(names[0])
       if(names.length < 2) {
         alert("Mindestens zwei Spieler eingeben")

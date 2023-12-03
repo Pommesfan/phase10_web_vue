@@ -77,8 +77,10 @@ import InjectForm from "@/components/InputForms/InjectForm";
 import DiscardForm from "@/components/InputForms/DiscardForm";
 import {connectWebSocket} from "@/mixins/handleWebSocket";
 import {
-  get_player_name, inverted_idx_list, map_cards, discardedCardIndices, selectedPlayerCard, setDiscardedCardIndices,
-  switchMode, setSelectedPlayerCard, injectTo, setInjectTo, INJECT_AFTER, INJECT_TO_FRONT, sort_cards
+  get_player_name, inverted_idx_list, map_cards, discardedCardIndices,
+  selectedPlayerCard, setDiscardedCardIndices, switchMode,
+  setSelectedPlayerCard, injectTo, setInjectTo, INJECT_AFTER, INJECT_TO_FRONT,
+  sort_cards, str_thisPlayer, str_number_of_players, str_thisPlayerIdx
 } from "@/mixins/utils"
 import PlayerCards from "@/components/OutputForms/PlayerCards";
 import DiscardedCards from "@/components/OutputForms/DiscardedCards.vue";
@@ -101,7 +103,7 @@ export default {
     }
   },
   mounted() {
-    if(sessionStorage.getItem("thisPlayer") == null) {
+    if(sessionStorage.getItem(str_thisPlayer) == null) {
       router.push({path : "/"})
       return
     }
@@ -126,7 +128,7 @@ export default {
         }
         discarded_card_current_player.push(sort_cards(cardGroup))
       }
-      GamePageRef.discardedCards[sessionStorage.getItem("thisPlayerIdx")] = discarded_card_current_player
+      GamePageRef.discardedCards[sessionStorage.getItem(str_thisPlayerIdx)] = discarded_card_current_player
 
       //remove player cards
       let playerCardIndices = inverted_idx_list(10, discardedCardIndices.flat())
@@ -212,22 +214,24 @@ export default {
     }
 
     function loadPlayers(data) {
+      if(sessionStorage.getItem(str_number_of_players) != null)
+        return
       let names = data['players']
       const numberOfPlayers = data['numberOfPlayers']
-      const thisPlayer = sessionStorage.getItem('thisPlayer')
+      const thisPlayer = sessionStorage.getItem(str_thisPlayer)
       for(let i = 0; i < numberOfPlayers; i++) {
         sessionStorage.setItem("player_" + i, names[i])
-        if(names[i] == thisPlayer)
-          sessionStorage.setItem("thisPlayerIdx", i)
+        if(names[i] != thisPlayer)
+          sessionStorage.setItem(str_thisPlayerIdx, i)
       }
-      sessionStorage.setItem("number_of_players", numberOfPlayers)
+      sessionStorage.setItem(str_number_of_players, numberOfPlayers)
     }
 
     function newGameMessage(data) {
       let msg = "Neues Spiel\nPhase " + data['numberOfPhase'][0] + ": " + data['phaseDescription'][0] + "\n\nSpieler:"
-      const numberOfPlayers = sessionStorage.getItem("number_of_players")
+      const numberOfPlayers = sessionStorage.getItem(str_number_of_players)
       for(let i = 0; i < numberOfPlayers; i++) {
-        let name = sessionStorage.getItem("player_" + i)
+        let name = get_player_name(i)
         msg += "\n" + name
       }
       alert(msg)
@@ -243,7 +247,7 @@ export default {
 
     function new_round(data) {
       setPhaseAndPlayers(data)
-      const number_of_players= sessionStorage.getItem("number_of_players")
+      const number_of_players= sessionStorage.getItem(str_number_of_players)
       GamePageRef.discardedCards = new Array(parseInt(number_of_players)).fill(null)
       GamePageRef.playerCards = data['cardStash']
       GamePageRef.cardGroupSize = data['card_group_size']
@@ -262,12 +266,12 @@ export default {
       //Message
       let msg = "Spieler " + data['winningPlayer'] + " hat gewonnen\n"
 
-      const length = sessionStorage.getItem("number_of_players")
+      const length = sessionStorage.getItem(str_number_of_players)
       const phases = data['phases']
       const errorPoints = data['errorPoints']
 
       for(let i = 0; i < length; i++) {
-        const player = sessionStorage.getItem("player_" + i)
+        const player = get_player_name(i)
         msg += "\n" + player + ": Phase " + phases[i] + "; " + errorPoints[i] + " Fehlerpunkte"
       }
 
@@ -296,8 +300,8 @@ export default {
     }
 
     function setPhaseAndPlayers(data) {
-      let idx_player = parseInt(sessionStorage.getItem('thisPlayerIdx'))
-      let currentPlayer = sessionStorage.getItem("thisPlayer")
+      let idx_player = parseInt(sessionStorage.getItem(str_thisPlayerIdx))
+      let currentPlayer = sessionStorage.getItem(str_thisPlayer)
       let n = data['numberOfPhase'][idx_player]
       let description = data['phaseDescription'][idx_player]
       document.getElementById("currentPlayerAndPhase").innerHTML =

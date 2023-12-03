@@ -5,7 +5,7 @@ export function get_player_name(idx) {
 }
 
 export function back_to_home_or_game() {
-    if(sessionStorage.getItem('thisPlayer') == null) {
+    if(sessionStorage.getItem(str_thisPlayer) == null) {
         router.push({path : "/"})
     } else {
         router.push({path : "/game"})
@@ -42,7 +42,7 @@ export function map_cards(playerCardIndices, cards) {
 }
 
 export function sort_cards(stash) {
-    stash.sort(function(a,b) {return a.value > b.value})
+    stash.sort(function(a,b) {return a.value >= b.value})
     for(let i = 0; i < stash.length - 1; i++) {
         let j = i+1
         if(stash[i].value + 1 != (stash[i+1].value)) {
@@ -65,6 +65,9 @@ export class InjectCardData {
 
 export const INJECT_TO_FRONT = 1
 export const INJECT_AFTER = 2
+export const str_number_of_players = "number_of_players"
+export const str_thisPlayer = "thisPlayer"
+export const str_thisPlayerIdx = "thisPlayerIdx"
 
 export var selectedPlayerCard = null
 export var switchMode = null
