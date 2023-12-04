@@ -6,6 +6,7 @@
 
 <script>
 import {websocket} from "@/mixins/handleWebSocket";
+import {setInjectTo, InjectCardData} from "@/mixins/utils";
 
 export default {
   name: "InjectForm",
@@ -21,7 +22,12 @@ export default {
       let target = target_qs.value.split("_")
       let player_to = parseInt(target[0])
       let group_to = parseInt(target[1])
-      let position_to = target[2]
+      let position_to = parseInt(target[2])
+
+      card_to_inject_qs.checked = false
+      target_qs.checked = false
+
+      setInjectTo(new InjectCardData(card_to_inject, player_to, group_to, position_to))
 
       websocket.send(JSON.stringify({
         "cmd": "inject",

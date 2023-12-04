@@ -1,3 +1,5 @@
+import {str_thisPlayer} from "@/mixins/utils";
+
 export var websocket = null
 
 export function connectWebSocket(updateFunction) {
@@ -5,7 +7,7 @@ export function connectWebSocket(updateFunction) {
 
     newWebsocket.onopen = function() {
         console.log("Trying to connect to Server");
-        newWebsocket.send(JSON.stringify({"cmd": "loginPlayer", "loggedInPlayer": sessionStorage.getItem("thisPlayer")}))
+        newWebsocket.send(JSON.stringify({"cmd": "loginPlayer", "loggedInPlayer": sessionStorage.getItem(str_thisPlayer)}))
         newWebsocket.send(JSON.stringify({"cmd": "getStatus"}))
     }
 
