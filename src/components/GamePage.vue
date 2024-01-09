@@ -103,7 +103,7 @@ export default {
   },
   mounted() {
     if(sessionStorage.getItem(str_thisPlayer) == null) {
-      router.push({path : "/"})
+      goto_homepage()
       return
     }
 
@@ -115,6 +115,8 @@ export default {
     const inputFormInject = document.getElementById("inputFormInject")
     const new_open_div = document.getElementById("new_open_div")
 
+    var sortCards = []
+
     function load_discarded_cards() {
       //copy player cards as discarded
       let discarded_card_current_player = []
@@ -125,7 +127,9 @@ export default {
           let idx = indices[j]
           cardGroup.push(GamePageRef.playerCards[idx])
         }
-        discarded_card_current_player.push(sort_cards(cardGroup))
+        if (sortCards[i])
+          sort_cards(cardGroup)
+        discarded_card_current_player.push(cardGroup)
       }
       GamePageRef.discardedCards[sessionStorage.getItem(str_thisPlayerIdx)] = discarded_card_current_player
 
@@ -167,6 +171,7 @@ export default {
         }
       } else {
         setInjectTo(null)
+        setDiscardedCardIndices([])
         alert("Ungültiger Spielzug")
       }
       GamePageRef.checkboxesPlayerCards = 0
@@ -249,6 +254,7 @@ export default {
       setPhaseAndPlayers(data)
       GamePageRef.playerCards = data['cardStash']
       GamePageRef.cardGroupSize = data['card_group_size']
+      sortCards = data['sortCards']
       newGameMessage(data)
     }
 
@@ -258,6 +264,7 @@ export default {
       GamePageRef.discardedCards = new Array(parseInt(number_of_players)).fill(null)
       GamePageRef.playerCards = data['cardStash']
       GamePageRef.cardGroupSize = data['card_group_size']
+      sortCards = data['sortCards']
 
       let s = "Neue Runde:"
       const errorPoints = data['errorPoints']
@@ -284,7 +291,7 @@ export default {
 
       alert(msg)
       sessionStorage.clear()
-      router.push({path : "/"})
+      goto_homepage()
     }
 
     function playerHasDiscarded(data) {
@@ -311,8 +318,9 @@ export default {
       let currentPlayer = sessionStorage.getItem(str_thisPlayer)
       let n = data['numberOfPhase'][idx_player]
       let description = data['phaseDescription'][idx_player]
+      let team_id = sessionStorage.getItem("team_id")
       document.getElementById("currentPlayerAndPhase").innerHTML =
-          "Aktueller Spieler: " + currentPlayer + "; Phase " + n + ": " + description
+          "Aktueller Spieler: " + currentPlayer + "; Phase " + n + ": " + description + "; Team-ID: " + team_id
     }
 
     function fullLoad(data) {
@@ -320,9 +328,14 @@ export default {
         GamePageRef.playerCards = data['cardStash']
         GamePageRef.discardedCards = data['discardedStash']
         GamePageRef.cardGroupSize = data['card_group_size']
+        sortCards = data['sortCards']
         loadPlayers(data)
         setPhaseAndPlayers(data)
       }
+    }
+
+    function goto_homepage() {
+      router.push({path : "/"})
     }
 
     function update(data) {
@@ -346,6 +359,9 @@ export default {
         playerHasDiscarded(data)
       } else if(event == "PlayerHasInjected") {
         playerHasInjected(data)
+      } else if(event == "login_failed") {
+        alert("Login fehlgeschlagen")
+        goto_homepage()
       }
     }
   }

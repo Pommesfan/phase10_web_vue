@@ -47,6 +47,10 @@
             <label for = "admission_name">Beitritt:</label>
             <br>
             <input type="text" id="admission_name" value="">
+            <br>
+            <label for = "team_id">Team-ID:</label>
+            <br>
+            <input type="text" id="team_id" value="">
           </div>
           <button id="submit_admission" type="submit" class="btn btn-primary">Starten</button>
         </div>
@@ -60,7 +64,7 @@
 <script>
 import router from "@/router";
 import NavBar from "@/components/NavBar";
-import {post_data} from "@/mixins/utils";
+import {post_data, str_teamID} from "@/mixins/utils";
 export default {
   name: "HomePage",
   components: {NavBar},
@@ -86,15 +90,19 @@ export default {
 
     function submit_admission() {
       set_own_name(document.getElementById("admission_name").value)
-      update()
+      sessionStorage.setItem(str_teamID, document.getElementById("team_id").value)
+      router.push({path : "/game"})
     }
 
     function set_own_name(name) {
       sessionStorage.setItem("thisPlayer", name)
     }
 
-    function update() {
-      router.push({path : "/game"})
+    function update(data) {
+      let team_id = data[str_teamID]
+      sessionStorage.setItem(str_teamID, team_id)
+      alert("Team-ID:\n" + team_id)
+      document.location.replace("/game")
     }
 
     document.getElementById("submit_player_names").onclick = submit_player_names
