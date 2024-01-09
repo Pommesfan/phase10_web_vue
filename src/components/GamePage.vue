@@ -171,6 +171,7 @@ export default {
         }
       } else {
         setInjectTo(null)
+        setDiscardedCardIndices([])
         alert("Ungültiger Spielzug")
       }
       GamePageRef.checkboxesPlayerCards = 0
