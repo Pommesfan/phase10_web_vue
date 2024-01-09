@@ -115,6 +115,8 @@ export default {
     const inputFormInject = document.getElementById("inputFormInject")
     const new_open_div = document.getElementById("new_open_div")
 
+    var sortCards = []
+
     function load_discarded_cards() {
       //copy player cards as discarded
       let discarded_card_current_player = []
@@ -125,7 +127,9 @@ export default {
           let idx = indices[j]
           cardGroup.push(GamePageRef.playerCards[idx])
         }
-        discarded_card_current_player.push(sort_cards(cardGroup))
+        if (sortCards[i])
+          sort_cards(cardGroup)
+        discarded_card_current_player.push(cardGroup)
       }
       GamePageRef.discardedCards[sessionStorage.getItem(str_thisPlayerIdx)] = discarded_card_current_player
 
@@ -249,6 +253,7 @@ export default {
       setPhaseAndPlayers(data)
       GamePageRef.playerCards = data['cardStash']
       GamePageRef.cardGroupSize = data['card_group_size']
+      sortCards = data['sortCards']
       newGameMessage(data)
     }
 
@@ -258,6 +263,7 @@ export default {
       GamePageRef.discardedCards = new Array(parseInt(number_of_players)).fill(null)
       GamePageRef.playerCards = data['cardStash']
       GamePageRef.cardGroupSize = data['card_group_size']
+      sortCards = data['sortCards']
 
       let s = "Neue Runde:"
       const errorPoints = data['errorPoints']
@@ -321,6 +327,7 @@ export default {
         GamePageRef.playerCards = data['cardStash']
         GamePageRef.discardedCards = data['discardedStash']
         GamePageRef.cardGroupSize = data['card_group_size']
+        sortCards = data['sortCards']
         loadPlayers(data)
         setPhaseAndPlayers(data)
       }
