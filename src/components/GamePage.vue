@@ -103,7 +103,7 @@ export default {
   },
   mounted() {
     if(sessionStorage.getItem(str_thisPlayer) == null) {
-      router.push({path : "/"})
+      goto_homepage()
       return
     }
 
@@ -290,7 +290,7 @@ export default {
 
       alert(msg)
       sessionStorage.clear()
-      router.push({path : "/"})
+      goto_homepage()
     }
 
     function playerHasDiscarded(data) {
@@ -333,6 +333,10 @@ export default {
       }
     }
 
+    function goto_homepage() {
+      router.push({path : "/"})
+    }
+
     function update(data) {
       let event = data['event']
       if (event == "GoToDiscardEvent") {
@@ -354,6 +358,9 @@ export default {
         playerHasDiscarded(data)
       } else if(event == "PlayerHasInjected") {
         playerHasInjected(data)
+      } else if(event == "login_failed") {
+        alert("Login fehlgeschlagen")
+        goto_homepage()
       }
     }
   }
