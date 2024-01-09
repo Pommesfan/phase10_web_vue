@@ -1,4 +1,4 @@
-import {str_thisPlayer} from "@/mixins/utils";
+import {str_teamID, str_thisPlayer} from "@/mixins/utils";
 
 export var websocket = null
 
@@ -7,7 +7,11 @@ export function connectWebSocket(updateFunction) {
 
     newWebsocket.onopen = function() {
         console.log("Trying to connect to Server");
-        newWebsocket.send(JSON.stringify({"cmd": "loginPlayer", "loggedInPlayer": sessionStorage.getItem(str_thisPlayer)}))
+        newWebsocket.send(JSON.stringify({
+            "cmd": "loginPlayer",
+            "loggedInPlayer": sessionStorage.getItem(str_thisPlayer),
+            "team_id": sessionStorage.getItem(str_teamID)
+        }))
         newWebsocket.send(JSON.stringify({"cmd": "getStatus"}))
     }
 
