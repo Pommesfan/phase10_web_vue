@@ -2,3 +2,7 @@
 [x] card-component
 [x] correct css in help- and about page
 [x] responsive design: show multiple groups of discarded cards among each other if space is not enough
+[ ] in homepage change document.replace with router.push
+[ ] correct rendering with ref
+[ ] at discarded cards show current phase and error points from all
+[ ] in server remove redundant json
