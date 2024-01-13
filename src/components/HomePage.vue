@@ -17,6 +17,7 @@
         </picture>
       </div>
       <div id=namePanel class="col-lg-2">
+        <p><strong>Neues Team erstellen</strong></p>
         <div class="name">
           <div class="player">
             <label for="p1">Player 1:</label>
@@ -42,9 +43,11 @@
             <input type="text" id="p4" name="p4" value="">
           </div>
           <button id="submit_player_names" type="submit" class="btn btn-primary">Starten</button>
-
+          <br>
+          <br>
           <div class="admission">
-            <label for = "admission_name">Beitritt:</label>
+            <p><strong>Beitritt</strong></p>
+            <label for = "admission_name">Name:</label>
             <br>
             <input type="text" id="admission_name" value="">
             <br>
@@ -114,5 +117,9 @@ export default {
 <style scoped>
   #namePanel {
     align-self: flex-end;
+  }
+  .name{
+    text-align: center;
+    color: darkslateblue;
   }
 </style>
