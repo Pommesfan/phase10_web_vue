@@ -17,8 +17,8 @@
         </picture>
       </div>
       <div id=namePanel class="col-lg-2">
-        <p><strong>Neues Team erstellen</strong></p>
         <div class="name">
+          <p><strong>Neues Team erstellen</strong></p>
           <div class="player">
             <label for="p1">Player 1:</label>
             <br>
@@ -105,7 +105,7 @@ export default {
       let team_id = data[str_teamID]
       sessionStorage.setItem(str_teamID, team_id)
       alert("Team-ID:\n" + team_id)
-      document.location.replace("/game")
+      router.push({path : "/game"})
     }
 
     document.getElementById("submit_player_names").onclick = submit_player_names
