@@ -4,5 +4,5 @@
 [x] responsive design: show multiple groups of discarded cards among each other if space is not enough
 [x] in homepage change document.replace with router.push
 [ ] correct rendering with ref
-[ ] at discarded cards show current phase and error points from all
-[ ] in server remove redundant json
+[x] at discarded cards show current phase and error points from all
+[x] in server remove redundant json

@@ -8,11 +8,12 @@
 
     <div class="container-fluid">
           <div id="discardedCards" class="row">
-            <DiscardedCards :key="discardedCards" :cards="discardedCards" :showRadioButtons="radioButtonsDiscardedCards"></DiscardedCards>
+            <DiscardedCards :key="discardedCards" :cards="discardedCards" :showRadioButtons="radioButtonsDiscardedCards"
+                            :phaseDescription="phaseDescription" :numberOfPhase="numberOfPhase" :errorPoints="errorPoints"></DiscardedCards>
           </div>
           <div class="crow-100">
             <div>
-              <p id="currentPlayerAndPhase"></p><br>
+              <p>{{currentPlayerAndTeam}}</p><br>
               <div class="row" id="new_open_div" hidden>
                 <div class="col-3">
                   Neue Karte:<br>
@@ -95,10 +96,14 @@ export default {
       checkboxesPlayerCards: 0,
       radioButtonsPlayerCards: false,
       cardGroupSize: 0,
+      phaseDescription: [],
+      numberOfPhase: [],
+      errorPoints: [],
       discardedCards: [],
       radioButtonsDiscardedCards: false,
       newCardObj: null,
-      openCardObj:null
+      openCardObj:null,
+      currentPlayerAndTeam: ""
     }
   },
   mounted() {
@@ -249,9 +254,21 @@ export default {
       alert(msg)
     }
 
+    function newRoundMessage() {
+      const numberOfPlayers = sessionStorage.getItem(str_number_of_players)
+      let s = "Neue Runde:"
+      for(let i = 0; i < numberOfPlayers; i++) {
+        s += ("\n" + get_player_name(i) + ": " + GamePageRef.errorPoints[i] + " Fehlerpunkte; Phase: "
+            + GamePageRef.numberOfPhase[i] + ": " + GamePageRef.phaseDescription[i])
+      }
+      alert(s)
+    }
+
     function newGame(data) {
       loadPlayers(data)
-      setPhaseAndPlayers(data)
+      setPhaseAndPlayers()
+      const numberOfPlayers = parseInt(sessionStorage.getItem(str_number_of_players))
+      GamePageRef.errorPoints = new Array(numberOfPlayers).fill(0)
       GamePageRef.playerCards = data['cardStash']
       GamePageRef.cardGroupSize = data['card_group_size']
       sortCards = data['sortCards']
@@ -265,21 +282,15 @@ export default {
       GamePageRef.playerCards = data['cardStash']
       GamePageRef.cardGroupSize = data['card_group_size']
       sortCards = data['sortCards']
-
-      let s = "Neue Runde:"
-      const errorPoints = data['errorPoints']
-      const number_of_phase = data['numberOfPhase']
-      const phase_description = data['phaseDescription']
-      for(let i = 0; i < number_of_players; i++) {
-        s += ("\n" + get_player_name(i) + ": " + errorPoints[i] + " Fehlerpunkte; Phase: " + number_of_phase[i] + ": " + phase_description[i])
-      }
-      alert(s)
+      GamePageRef.errorPoints = data['errorPoints']
+      GamePageRef.phaseDescription= data['phaseDescription']
+      GamePageRef.numberOfPhase = data['numberOfPhase']
+      newRoundMessage()
     }
 
     function gameEnded(data) {
       //Message
       let msg = "Spieler " + data['winningPlayer'] + " hat gewonnen\n"
-
       const length = sessionStorage.getItem(str_number_of_players)
       const phases = data['phases']
       const errorPoints = data['errorPoints']
@@ -313,14 +324,10 @@ export default {
       }
     }
 
-    function setPhaseAndPlayers(data) {
-      let idx_player = parseInt(sessionStorage.getItem(str_thisPlayerIdx))
+    function setPhaseAndPlayers() {
       let currentPlayer = sessionStorage.getItem(str_thisPlayer)
-      let n = data['numberOfPhase'][idx_player]
-      let description = data['phaseDescription'][idx_player]
       let team_id = sessionStorage.getItem("team_id")
-      document.getElementById("currentPlayerAndPhase").innerHTML =
-          "Aktueller Spieler: " + currentPlayer + "; Phase " + n + ": " + description + "; Team-ID: " + team_id
+      GamePageRef.currentPlayerAndTeam = "Aktueller Spieler: " + currentPlayer + "; Team-ID: " + team_id
     }
 
     function fullLoad(data) {
@@ -328,9 +335,12 @@ export default {
         GamePageRef.playerCards = data['cardStash']
         GamePageRef.discardedCards = data['discardedStash']
         GamePageRef.cardGroupSize = data['card_group_size']
+        GamePageRef.errorPoints = data['errorPoints']
+        GamePageRef.phaseDescription = data['phaseDescription']
+        GamePageRef.numberOfPhase = data['numberOfPhase']
         sortCards = data['sortCards']
         loadPlayers(data)
-        setPhaseAndPlayers(data)
+        setPhaseAndPlayers()
       }
     }
 

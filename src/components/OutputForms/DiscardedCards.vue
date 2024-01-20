@@ -1,7 +1,9 @@
 <template>
   <div v-for="(_, i) in cards.length" :key="i" class="crow" id="discarded">
     <div class="row">
-      {{get_player_name(i)}}
+      <strong class="player_header">
+        {{"Spieler: " + get_player_name(i) + "; Phase " + numberOfPhase[i] + ": " + phaseDescription[i] + "; Fehlerpunkte: " + errorPoints[i]}}
+      </strong>
     </div>
     <div class="d-inline-block" v-if="cards[i] == None">
       <p>Keine Karten</p>
@@ -30,7 +32,7 @@ export default {
   name: "DiscardedCards",
   components: {CardComponent},
   methods: {get_player_name},
-  props: ["cards", "showRadioButtons"],
+  props: ["cards", "showRadioButtons", "phaseDescription", "numberOfPhase", "errorPoints"],
 }
 </script>
 
@@ -44,5 +46,8 @@ export default {
     overflow: hidden;
     height: 1px;
     width: 15px;
+  }
+  .player_header {
+    color: darkslateblue;
   }
 </style>
