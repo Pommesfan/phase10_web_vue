@@ -80,7 +80,8 @@ import {connectWebSocket} from "@/mixins/handleWebSocket";
 import {
   get_player_name, inverted_idx_list, map_cards, discardedCardIndices, selectedPlayerCard, setDiscardedCardIndices,
   switchMode, setSelectedPlayerCard, injectTo, setInjectTo, INJECT_AFTER, INJECT_TO_FRONT, sort_cards, str_thisPlayer,
-  str_number_of_players, str_thisPlayerIdx, OPEN_CARD, NEW_CARD
+  str_numberOfPlayers, str_thisPlayerIdx, OPEN_CARD, NEW_CARD, str_cardStash, str_discardedStash, str_card_group_size,
+  str_errorPoints, str_phaseDescription, str_numberOfPhase, str_sortCards
 } from "@/mixins/utils"
 import PlayerCards from "@/components/OutputForms/PlayerCards";
 import DiscardedCards from "@/components/OutputForms/DiscardedCards.vue";
@@ -120,7 +121,7 @@ export default {
     const inputFormInject = document.getElementById("inputFormInject")
     const new_open_div = document.getElementById("new_open_div")
 
-    var sortCards = []
+    let sortCards = [];
 
     function load_discarded_cards() {
       //copy player cards as discarded
@@ -231,22 +232,22 @@ export default {
     }
 
     function loadPlayers(data) {
-      if(sessionStorage.getItem(str_number_of_players) != null)
+      if(sessionStorage.getItem(str_numberOfPlayers) != null)
         return
       let names = data['players']
-      const numberOfPlayers = data['numberOfPlayers']
+      const numberOfPlayers = data[str_numberOfPlayers]
       const thisPlayer = sessionStorage.getItem(str_thisPlayer)
       for(let i = 0; i < numberOfPlayers; i++) {
         sessionStorage.setItem("player_" + i, names[i])
         if(names[i] == thisPlayer)
           sessionStorage.setItem(str_thisPlayerIdx, i)
       }
-      sessionStorage.setItem(str_number_of_players, numberOfPlayers)
+      sessionStorage.setItem(str_numberOfPlayers, numberOfPlayers)
     }
 
     function newGameMessage(data) {
-      let msg = "Neues Spiel\nPhase " + data['numberOfPhase'][0] + ": " + data['phaseDescription'][0] + "\n\nSpieler:"
-      const numberOfPlayers = sessionStorage.getItem(str_number_of_players)
+      let msg = "Neues Spiel\nPhase " + data[str_numberOfPhase][0] + ": " + data[str_phaseDescription][0] + "\n\nSpieler:"
+      const numberOfPlayers = sessionStorage.getItem(str_numberOfPlayers)
       for(let i = 0; i < numberOfPlayers; i++) {
         let name = get_player_name(i)
         msg += "\n" + name
@@ -255,7 +256,7 @@ export default {
     }
 
     function newRoundMessage() {
-      const numberOfPlayers = sessionStorage.getItem(str_number_of_players)
+      const numberOfPlayers = sessionStorage.getItem(str_numberOfPlayers)
       let s = "Neue Runde:"
       for(let i = 0; i < numberOfPlayers; i++) {
         s += ("\n" + get_player_name(i) + ": " + GamePageRef.errorPoints[i] + " Fehlerpunkte; Phase: "
@@ -267,33 +268,33 @@ export default {
     function newGame(data) {
       loadPlayers(data)
       setPhaseAndPlayers()
-      const numberOfPlayers = parseInt(sessionStorage.getItem(str_number_of_players))
+      const numberOfPlayers = parseInt(sessionStorage.getItem(str_numberOfPlayers))
       GamePageRef.errorPoints = new Array(numberOfPlayers).fill(0)
-      GamePageRef.playerCards = data['cardStash']
-      GamePageRef.cardGroupSize = data['card_group_size']
-      sortCards = data['sortCards']
+      GamePageRef.playerCards = data[str_cardStash]
+      GamePageRef.cardGroupSize = data[str_card_group_size]
+      sortCards = data[str_sortCards]
       newGameMessage(data)
     }
 
     function new_round(data) {
       setPhaseAndPlayers(data)
-      const number_of_players= sessionStorage.getItem(str_number_of_players)
+      const number_of_players= sessionStorage.getItem(str_numberOfPlayers)
       GamePageRef.discardedCards = new Array(parseInt(number_of_players)).fill(null)
-      GamePageRef.playerCards = data['cardStash']
-      GamePageRef.cardGroupSize = data['card_group_size']
-      sortCards = data['sortCards']
-      GamePageRef.errorPoints = data['errorPoints']
-      GamePageRef.phaseDescription= data['phaseDescription']
-      GamePageRef.numberOfPhase = data['numberOfPhase']
+      GamePageRef.playerCards = data[str_cardStash]
+      GamePageRef.cardGroupSize = data[str_card_group_size]
+      sortCards = data[str_sortCards]
+      GamePageRef.errorPoints = data[str_errorPoints]
+      GamePageRef.phaseDescription= data[str_phaseDescription]
+      GamePageRef.numberOfPhase = data[str_numberOfPhase]
       newRoundMessage()
     }
 
     function gameEnded(data) {
       //Message
       let msg = "Spieler " + data['winningPlayer'] + " hat gewonnen\n"
-      const length = sessionStorage.getItem(str_number_of_players)
+      const length = sessionStorage.getItem(str_numberOfPlayers)
       const phases = data['phases']
-      const errorPoints = data['errorPoints']
+      const errorPoints = data[str_errorPoints]
 
       for(let i = 0; i < length; i++) {
         const player = get_player_name(i)
@@ -332,13 +333,13 @@ export default {
 
     function fullLoad(data) {
       if(data['fullLoad']) {
-        GamePageRef.playerCards = data['cardStash']
-        GamePageRef.discardedCards = data['discardedStash']
-        GamePageRef.cardGroupSize = data['card_group_size']
-        GamePageRef.errorPoints = data['errorPoints']
-        GamePageRef.phaseDescription = data['phaseDescription']
-        GamePageRef.numberOfPhase = data['numberOfPhase']
-        sortCards = data['sortCards']
+        GamePageRef.playerCards = data[str_cardStash]
+        GamePageRef.discardedCards = data[str_discardedStash]
+        GamePageRef.cardGroupSize = data[str_card_group_size]
+        GamePageRef.errorPoints = data[str_errorPoints]
+        GamePageRef.phaseDescription = data[str_phaseDescription]
+        GamePageRef.numberOfPhase = data[str_numberOfPhase]
+        sortCards = data[str_sortCards]
         loadPlayers(data)
         setPhaseAndPlayers()
       }
