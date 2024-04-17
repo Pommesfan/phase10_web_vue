@@ -3,6 +3,8 @@
 </template>
 
 <script>
+import {CARD_HIGHT, CARD_WIDTH} from "@/mixins/utils";
+
 export default {
   name: "CardComponent",
   props: ["card", "id"],
@@ -34,8 +36,8 @@ export default {
       color = getColor(color)
     }
 
-    c.width = 100
-    c.height = 150
+    c.width = CARD_WIDTH
+    c.height = CARD_HIGHT
     const ctx = c.getContext("2d");
 
     function wave(ax,ay,bx,by,cx,cy,dx,dy,w) {
@@ -54,7 +56,7 @@ export default {
       ctx.moveTo(ax, ay)
       ctx.lineTo(bx, by)
       ctx.lineTo(cx, cy)
-      ctx.arcTo(bx, by, ax, ay, 20)
+      ctx.arcTo(bx, by, ax, ay, CARD_WIDTH / 5)
       ctx.closePath()
       ctx.fill()
     }
@@ -80,31 +82,33 @@ export default {
     }
 
     ctx.fillStyle = "ivory"
-    ctx.fillRect(0,0,100,150)
+    ctx.fillRect(0,0, CARD_WIDTH, CARD_HIGHT)
     ctx.fillStyle = color
 
     ctx.shadowColor = shadowColor();
-    ctx.shadowBlur = 15;
+    ctx.shadowBlur = CARD_WIDTH / 6.66;
     //upper wave
-    wave(0,0,0,30,100,30, 100, 0, 15)
+    wave(0,0,0,CARD_HIGHT / 5, CARD_WIDTH,CARD_HIGHT / 5, CARD_WIDTH, 0, CARD_WIDTH / 6.66)
     //bottom wave
-    wave(0,150, 0,120,100,120,100,150, 15)
+    wave(0,CARD_HIGHT, 0,CARD_HIGHT / 5 * 4, CARD_WIDTH,CARD_HIGHT / 5 * 4, CARD_WIDTH, CARD_HIGHT, CARD_WIDTH / 6.66)
     ctx.shadowBlur = 0;
 
     ctx.fillStyle = digitColor()
 
-    ctx.font = "64px serif"
+    let font_size = CARD_WIDTH / 1.5625
+    ctx.font = font_size + "px serif"
+    let number_y = CARD_HIGHT / 2 + CARD_WIDTH / 4
     if(number < 10) {
-      ctx.fillText(number.toString(), 32,100)
+      ctx.fillText(number.toString(), CARD_WIDTH / 3.125, number_y)
     } else {
-      ctx.fillText(number.toString(), 10,100)
+      ctx.fillText(number.toString(), CARD_WIDTH / 10, number_y)
     }
 
     ctx.fillStyle = "white"
-    cutEdge(0,25, 0,0, 25,0)
-    cutEdge(100,25,100,0, 75, 0)
-    cutEdge(0,125,0,150,25,150)
-    cutEdge(100, 125, 100, 150, 75, 150)
+    cutEdge(0,CARD_WIDTH / 4, 0,0, CARD_WIDTH / 4,0)
+    cutEdge(CARD_WIDTH,CARD_WIDTH / 4,CARD_WIDTH,0, CARD_WIDTH / 4 * 3, 0)
+    cutEdge(0,CARD_HIGHT / 6 * 5,0,CARD_HIGHT,CARD_WIDTH / 4, CARD_HIGHT)
+    cutEdge(CARD_WIDTH, CARD_HIGHT / 6 * 5, CARD_WIDTH, CARD_HIGHT, CARD_WIDTH / 4 * 3, CARD_HIGHT)
   }
 }
 

@@ -63,6 +63,9 @@ export class InjectCardData {
     }
 }
 
+export const CARD_WIDTH = 100
+export const CARD_HIGHT = CARD_WIDTH * 1.5
+
 export const INJECT_TO_FRONT = 1
 export const INJECT_AFTER = 2
 export const NEW_CARD = 1
