@@ -13,7 +13,7 @@
         <div class="space"></div>
         <input type="radio" v-if="showRadioButtons==true" v-bind:id="'injectTo_radiobutton_' + i + '_'+ j + '_1'"
                name="discardedCardToggleGroup" :value="i + '_' + j + '_1'" class="form-check-input">
-        <CardComponent v-for="(card,k) in cards[i][j]" :key="k" :id="'discarded_card_' + i + '_' + j + '_' + k"
+        <CardComponent v-for="(card,k) in cards[i][j]" :key="card" :id="'discarded_card_' + i + '_' + j + '_' + k"
                        :card="card"></CardComponent>
         <input type="radio" v-if="showRadioButtons==true" v-bind:id="'injectTo_radiobutton_' + i + '_'+ j + '_2'"
                name="discardedCardToggleGroup" :value="i + '_' + j + '_2'" class="form-check-input">
